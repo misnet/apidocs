@@ -112,6 +112,16 @@ api-jsons
 - response: 请求返回的数据内容对象，每一个内容对象具有type、description、
 sample、responseItem属性，如果是response/data这个对象还可能有hasSampleFile属性
 
+
+### request节点属性说明
+- request节点是一个数组，表示要对API传递的业务参数
+- 每一个业务参数具有param、required、default、type、description这几个属性
+- param: 表示要传的参数名称
+- description: 参数的描述
+- default: 参数不传值时，服务端给了这个参数的默认值
+- required: true或false，表示是否必填项
+- type:参数类型，值有String，Integer，Float，Boolean四种
+
 ### 每一个response节点的属性说明
 - type：有Boolean、Object、Array、String、Integer
 - description: 描述

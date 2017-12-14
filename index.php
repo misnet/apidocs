@@ -169,7 +169,6 @@ $errorCodeList = $parser->getErrCodeList();
                 <thead>
                 <tr>
                 <td>参数</td>
-                <td>名称</td>
                 <td>类型</td>
                 <td>是否必须</td>
                 <td>默认值</td>
@@ -210,7 +209,7 @@ $errorCodeList = $parser->getErrCodeList();
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js"></script>
-<script type="text/javascript" src="asset/parser.js?v=0.2"></script>
+<script type="text/javascript" src="asset/parser.js?v=0.21"></script>
 
 </body>
 </html>

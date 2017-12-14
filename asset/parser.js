@@ -65,7 +65,6 @@ function _loadRequestParams(method,resp){
         for(var p in params){
             var html = [];
             html.push('<tr><td>'+params[p]['param']+'</td>');
-            html.push('<td>'+params[p]['name']+'</td>');
             html.push('<td>'+params[p]['type']+'</td>');
             html.push('<td>'+params[p]['required']+'</td>');
             html.push('<td>'+params[p]['default']+'</td>');

@@ -11,7 +11,6 @@
             "param":"uid",
             "required":true,
             "default":"",
-            "name":"用户ID",
             "type":"Integer",
             "description":"用户ID"
         },
@@ -19,25 +18,22 @@
             "param":"username",
             "required":true,
             "default":"",
-            "name":"用户名",
             "type":"String",
-            "description":"描述"
+            "description":"用户名"
         },
         {
             "param":"password",
             "required":false,
             "default":"",
             "type":"String",
-            "description":"密码",
-            "name":"密码"
+            "description":"密码"
         },
         {
             "param":"mobile",
             "required":true,
             "default":"",
             "type":"String",
-            "description":"手机号",
-            "name":"手机号"
+            "description":"手机号"
         }
     ],
     "response":{

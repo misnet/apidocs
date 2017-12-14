@@ -11,9 +11,8 @@
             "param":"id",
             "required":true,
             "default":"",
-            "name":"菜单ID",
             "type":"String",
-            "description":"以这个为依据来删除菜单"
+            "description":"菜单ID，以这个为依据来删除菜单"
         }
     ],
     "response":{

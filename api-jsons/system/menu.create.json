@@ -11,65 +11,57 @@
             "param":"name",
             "required":true,
             "default":"",
-            "name":"菜单名",
             "type":"String",
-            "description":""
+            "description":"菜单名"
         },
         {
             "param":"parentId",
             "required":false,
             "default":0,
             "type":"Integer",
-            "description":"",
-            "name":"父级菜单ID"
+            "description":"父级菜单ID"
         },
         {
             "param":"controller",
             "required":true,
             "default":"",
-            "name":"controller名",
             "type":"String",
-            "description":""
+            "description":"controller名"
         },
         {
             "param":"action",
             "required":true,
             "default":"",
-            "name":"action名",
             "type":"String",
-            "description":""
+            "description":"action名"
         },
         {
             "param":"parameter",
             "required":false,
             "default":"",
-            "name":"参数",
             "type":"String",
-            "description":""
+            "description":"参数"
         },
         {
             "param":"display",
             "required":false,
             "default":"1",
-            "name":"是否显示",
             "type":"Integer",
-            "description":""
+            "description":"是否显示"
         },
         {
             "param":"sortByWeight",
             "required":false,
             "default":"0",
-            "name":"显示权重",
             "type":"Integer",
-            "description":""
+            "description":"显示权重"
         },
         {
             "param":"className",
             "required":false,
             "default":"",
-            "name":"图标样式名",
             "type":"String",
-            "description":""
+            "description":"图标样式名"
         }
     ],
     "response":{
