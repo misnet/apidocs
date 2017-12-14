@@ -1,0 +1,23 @@
+{
+    "status": 0,
+    "data": {
+        "list": [
+            {
+                "uid": "4",
+                "username": "dony",
+                "createTime": "1405906107",
+                "mobile": "15859079008",
+                "gender": "0"
+            },
+            {
+                "uid": "1",
+                "username": "admin",
+                "mobile": "13570254857",
+                "gender": "1"
+            }
+        ],
+        "total": 2,
+        "page": 1,
+        "limit": 10
+    }
+}

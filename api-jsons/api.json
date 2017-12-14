@@ -1,0 +1,12 @@
+[
+    {
+        "name":"后台用户API",
+        "summary":"提供了后台用户的相关API",
+        "apiFiles":"user/*.json"
+    },
+    {
+        "name":"系统API",
+        "summary":"提供了系统级的相关API",
+        "apiFiles":"system/*.json"
+    }
+]

@@ -1,0 +1,34 @@
+{
+    "id":"console.user.login",
+    "name":"用户登录",
+    "description":"",
+    "namespace":"Kuga\\Service\\ApiV3\\Console",
+    "path":"./ApiV3/Console",
+    "method":"user.login",
+    "accessLevel": 0,
+    "request":[
+        {
+            "param":"user",
+            "required":true,
+            "default":"",
+            "name":"用户名",
+            "type":"String",
+            "description":"描述"
+        },
+        {
+            "param":"password",
+            "required":true,
+            "default":"",
+            "type":"String",
+            "description":"密码",
+            "name":"密码"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Boolean",
+            "sample":true,
+            "description":"成功返回true，失败返回false"
+        }
+    }
+}

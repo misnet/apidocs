@@ -1,0 +1,139 @@
+$('#response_result').on('click','tr[data-index]',function(){
+    var currentIndex = $(this).data('index')+'.';
+    var childNodes   = $('#response_result').find('tr[data-index^="'+currentIndex+'"]');
+    if(childNodes.length>0){
+        if($(this).hasClass('type-open')){
+            $(this).removeClass('type-open').addClass('type-close');
+        }else{
+            $(this).removeClass('type-close').addClass('type-open');
+        }
+        //$(this).toggleClass('type-open','type-close');
+        //console.log('childNodes',childNodes.length,$(this).attr('class'));
+        if($(this).hasClass('type-open'))
+            childNodes.hide();
+        else
+            childNodes.show();
+    }
+
+});
+//显示某API的详情
+$('.apilist li a[data-method]').on('click',function(){
+    var method = $(this).data('method');
+    loadApiMethod(method);
+});
+
+if(location.hash){
+    var hash = location.hash.substring(1);
+    loadApiMethod(hash);
+}
+function loadApiMethod(method){
+    $('#api_detail_section').removeClass('hide');
+    $('#anchor').attr('name',method);
+    $('.apilist li.cur').removeClass('cur');
+    $('.apilist li[data-method="'+method+'"]').addClass('cur');
+    $('#api_name').html(method);
+    $('#api_name2').html('/'+method);
+    $('#api_name_doctitle').html(method);
+    $.ajax({
+        url:'read.php?rev='+Math.random(),
+        data:{'api':method},
+        dataType:'json',
+        success:function(resp){
+            var apiProps = resp['property'];
+            if(!_.isUndefined(apiProps['accessLevel'])){
+                var apiAuth = apiProps['accessLevel']==1?'true':'false';
+                $('#api_auth').text(apiAuth);
+            }else{
+                $('#api_auth').text('');
+            }
+            $('#api_description').html(apiProps['description']);
+            //加载请求参数说明
+            _loadRequestParams(method,apiProps);
+            //加载响应参数说明
+            _loadResponseResult(method,resp);
+            loadResponseSample(method,resp['sample']);
+        },error:function(e,t,p){
+            alert('API说明加载失败');
+        }
+    });
+}
+//加载请求参数说明
+function _loadRequestParams(method,resp){
+    $('#request_params').empty();
+    if(typeof resp['request']!='undefined'){
+        var params = resp['request'];
+        for(var p in params){
+            var html = [];
+            html.push('<tr><td>'+params[p]['param']+'</td>');
+            html.push('<td>'+params[p]['name']+'</td>');
+            html.push('<td>'+params[p]['type']+'</td>');
+            html.push('<td>'+params[p]['required']+'</td>');
+            html.push('<td>'+params[p]['default']+'</td>');
+            html.push('<td>'+params[p]['description']+'</td>');
+            html.push('</tr>');
+            $('#request_params').append(html.join(''));
+        }
+    }
+}
+//响应参数说明显示
+function _loadResponseResult(method,resp){
+    $('#response_result').children('tr:first-child').siblings('tr').remove();
+    var response = resp['property']['response'];
+    _loadReslutObject(response,0,'');
+}
+//显示响应参数的每一行
+function _createResponseRow(dataIndex,deep,itemKey,item,hasChild){
+    var html = [];
+    var cls ='padding-deep-'+deep;
+    if(deep!=0){
+        cls+= ' child-row';
+    }
+    if(hasChild){
+        cls+=' type-close';
+    }
+    html.push('<tr data-index="'+dataIndex+'" class="'+cls+'" data-parent=""><td>'+itemKey+'</td>');
+    html.push('<td>'+item['type']+'</td>');
+    html.push('<td>'+(item['sample']?item['sample']:'')+'</td>');
+    html.push('<td>'+(item['description']?item['description']:'')+'</td>');
+    html.push('</tr>');
+    return html.join('');
+}
+//解析每一个响应参数
+function _loadReslutObject(result,deep,parentIndex){
+    var j=1;
+    for(var key in result){
+        var dataIndex = parentIndex!=''?parentIndex+'.':'';
+        dataIndex+=j;
+        var html = [];
+        if(result[key]['responseItem']){
+            var html = _createResponseRow(dataIndex,deep,key,result[key],true);
+            $('#response_result').append(html);
+
+            for(var subKey in result[key]['responseItem']){
+                var tmp = {[subKey]:result[key]['responseItem'][subKey]};
+
+                _loadReslutObject(tmp,deep+1,dataIndex)
+            }
+        }else{
+            var html = _createResponseRow(dataIndex,deep,key,result[key],false);
+            $('#response_result').append(html);
+        }
+        j++;
+    }
+    return ;
+}
+
+//响应示例
+function loadResponseSample(method,resp){
+    $('#response_sample').html(JSON.stringify(resp, null, 4));
+}
+//加载异常响应示例
+$.ajax({
+    url:'read.php?rev='+Math.random(),
+    dataType:'json',
+    success:function(resp){
+        $('#error_response_sample').html(JSON.stringify(resp, null, 4));
+    },error:function(e,t,p){
+        alert('异常响应示例加载失败');
+    }
+});

@@ -1,0 +1,63 @@
+[
+    {
+        "code": 99999,
+        "message": "未知错误"
+    },
+    {
+        "code": 99000,
+        "message": "无效appkey或appsecret"
+    },
+    {
+        "code": 99001,
+        "message": "无效签名"
+    },
+    {
+        "code": 99002,
+        "message": "无效的接口"
+    },
+    {
+        "code": 99993,
+        "message": "参数缺失"
+    },
+    {
+        "code": 99994,
+        "message": "Access Token无效"
+    },
+    {
+        "code": 99995,
+        "message": "记录不存在"
+    },
+    {
+        "code": 89001,
+        "message": "手机号已注册过"
+    },
+    {
+        "code": 89002,
+        "message": "无效的手机号码"
+    },
+    {
+        "code": 89003,
+        "message": "密码错误"
+    },
+    {
+        "code": 89004,
+        "message": "短信验证码未发送过或已失效"
+    },
+    {
+        "code": 89005,
+        "message": "错误的短信验证码"
+    },
+    {
+        "code": 89006,
+        "message": "手机号未注册"
+    },
+
+    {
+        "code": 89007,
+        "message": "用户ID为空"
+    },
+    {
+        "code": 89008,
+        "message": "非本人记录，越权操作"
+    }
+]
