@@ -7,9 +7,11 @@
 - 读取定义好的api json文件，生成apidoc
 - 根据api json文件定义的sample数据，提供mock数据服务
 - 提供api测试功能【TODO】
+- 服务端对接口参数验证（不在本项目中）。服务端可以利用json中的request、method的部分，对前端传递的参数做验证，可以扩展一些验证规则，包括是否必填、合法性等，然后再将有效的参数传给接口，这样可以将对参数的验证可以统一独立出来，不需要每个API接口单独处理。
 
 ## 项目运行方式
 查看apidoc的方式 http://localhost/apidocs/index.php
+
 mock服务 http://localhost/apidocs/read.php?mock=1&api=接口的ID
 
 
