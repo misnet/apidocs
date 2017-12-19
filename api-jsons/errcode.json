@@ -16,16 +16,20 @@
         "message": "无效的接口"
     },
     {
-        "code": 99993,
+        "code": 99003,
         "message": "参数缺失"
     },
     {
-        "code": 99994,
+        "code": 99004,
         "message": "Access Token无效"
     },
     {
-        "code": 99995,
+        "code": 99005,
         "message": "记录不存在"
+    },
+    {
+        "code": 99006,
+        "message": "无效RefreshToken"
     },
     {
         "code": 89001,

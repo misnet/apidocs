@@ -9,7 +9,7 @@ $dir = realpath('api-jsons');
 
 define('DS', DIRECTORY_SEPARATOR);
 define('API_GATEWAY','http://api.kuga.wang/v3/gateway');
-define('API_TESTURL','http://api.kuga.wang/apitest.html');
+define('APIMOCK_URL','http://api.kuga.wang/apidocs');
 define('API_ROOT_DIR', $dir);
 
 
@@ -119,12 +119,12 @@ class ApiParser
     private function getSample($response){
         $data = [];
         foreach ($response as $key=>$node ){
-            if($node['item']){
+            if($node['responseItem']){
 
                 if(strtolower($node['type'])=='array'){
-                    $data[$key] = [$this->getSample($node['item'])];
+                    $data[$key] = [$this->getSample($node['responseItem'])];
                 }else{
-                    $data[$key] = $this->getSample($node['item']);
+                    $data[$key] = $this->getSample($node['responseItem']);
                 }
             }else{
                 $data[$key] = $this->parseSampleNode($node);

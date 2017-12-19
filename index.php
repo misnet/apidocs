@@ -3,7 +3,14 @@ include_once 'config.php';
 $parser = new ApiParser(API_ROOT_DIR);
 $modules= $parser->getApiModule();
 $errorCodeList = $parser->getErrCodeList();
-
+$phpSelf = $_SERVER['PHP_SELF'];
+$urlInfo = parse_url($phpSelf);
+$baseUrl  = $_SERVER['HTTP_HOST'].dirname($urlInfo['path']);
+if($_SERVER['SERVER_PORT']!=80){
+    $baseUrl = 'https://'.$baseUrl.'/';
+}else{
+    $baseUrl = 'http://'.$baseUrl.'/';
+}
 ?>
 <html>
 <head>
@@ -11,7 +18,7 @@ $errorCodeList = $parser->getErrCodeList();
 <meta charset="utf-8">
 <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-<link href="asset/default.css?v=0.3" rel="stylesheet"/>
+<link href="asset/default.css?v=0.4" rel="stylesheet"/>
     <style>
         dl.sample{
             margin:2px 0px;
@@ -34,11 +41,11 @@ $errorCodeList = $parser->getErrCodeList();
 <body>
 <div class="container">
     <div class="row">
-        <h1 style="text-align:center">相关API说明<a id="anchor"></a></h1>
+        <h1 class="apidoc-subject">API说明<a id="anchor"></a></h1>
     </div>
     <div class="row">
         <div class="col-sm-3">
-        <h2 class="apilist-title"><div>API列表</div></h2>
+
         <ul >
             <?php
             if(!empty($modules)){
@@ -53,7 +60,7 @@ $errorCodeList = $parser->getErrCodeList();
             ?>
         </ul>
             <div class="errorcode-panel">
-             <h2 class="apilist-title"><div>错误代码说明</div></h2>
+             <h2 class="apilist-error"><div>错误代码说明</div></h2>
              <ul class="errorcode">
                 <?php
                 if(!empty($errorCodeList)){
@@ -78,12 +85,12 @@ $errorCodeList = $parser->getErrCodeList();
                 <?php
                 if(API_GATEWAY) {
                     ?>
-                    <p>API网关地址：<?php echo API_GATEWAY?><span id="api_name2">/接口方法</span></p>
+                    <p>API网关地址：<?php echo API_GATEWAY?></p>
                     <?php
                 }
-                if(API_TESTURL){
+                if(APIMOCK_URL){
                     ?>
-                    <p>API测试地址：<a href="<?php echo API_TESTURL?>" target="_blank"><?php echo API_TESTURL?></a>
+                    <p>mock地址：<a target="_blank"  data-api-base="<?php echo $baseUrl?>read.php?mock=1&api=" class="api_mock"><?php echo $baseUrl?>read.php?mock=1&api=<span data-api-id="">/接口方法</span></a></p>
                         <?php
                     }
                 ?>
@@ -139,7 +146,7 @@ $errorCodeList = $parser->getErrCodeList();
                     <td>method</td>
                     <td>String</td>
                     <td>true</td>
-                    <td>接口名称，<span id="api_name"></span></td>
+                    <td>接口名称，<strong><span data-api-id=""></span></strong></td>
                 </tr>
 
                 <tr>
@@ -209,7 +216,7 @@ $errorCodeList = $parser->getErrCodeList();
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js"></script>
-<script type="text/javascript" src="asset/parser.js?v=0.21"></script>
+<script type="text/javascript" src="asset/parser.js?v=0.31"></script>
 
 </body>
 </html>

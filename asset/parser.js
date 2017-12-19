@@ -31,15 +31,17 @@ function loadApiMethod(method){
     $('#anchor').attr('name',method);
     $('.apilist li.cur').removeClass('cur');
     $('.apilist li[data-method="'+method+'"]').addClass('cur');
-    $('#api_name').html(method);
-    $('#api_name2').html('/'+method);
     $('#api_name_doctitle').html(method);
     $.ajax({
         url:'read.php?rev='+Math.random(),
         data:{'api':method},
         dataType:'json',
         success:function(resp){
+            var baseUrl = $('a.api_mock').attr('data-api-base');
+            $('a.api_mock').attr('href',baseUrl+method);
+
             var apiProps = resp['property'];
+            $('span[data-api-id]').html(method);
             if(!_.isUndefined(apiProps['accessLevel'])){
                 var apiAuth = apiProps['accessLevel']==1?'true':'false';
                 $('#api_auth').text(apiAuth);
