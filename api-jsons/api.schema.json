@@ -29,8 +29,8 @@
         "accessLevel": {
             "description": "表示accessToken的需求等级， 值=0表示服务端对api没有accessToken的验证要求； 值=1表示api必须传递accessToken字串 值=2表示服务端对accessToken无必须要求",
             "type": "integer",
-            "minimum": 1,
-            "maximum": 3
+            "minimum": 0,
+            "maximum": 2
         },
         "request":{
             "type":"array",
