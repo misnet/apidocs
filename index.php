@@ -11,6 +11,7 @@ if($_SERVER['SERVER_PORT']!=80){
 }else{
     $baseUrl = 'http://'.$baseUrl.'/';
 }
+$baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
 ?>
 <html>
 <head>
@@ -94,8 +95,8 @@ if($_SERVER['SERVER_PORT']!=80){
                         <?php
                     }
                 ?>
-            <p>公共参数</p>
-            <table class="table table-bordered table-striped">
+            <p>公共参数 <a href="javascript:;" id="btn-public-params-collapse">显示</a></p>
+            <table id="tb-public-params" class="table table-bordered table-striped collapse">
             <thead>
             <tr>
             <td>名称</td>
@@ -158,14 +159,14 @@ if($_SERVER['SERVER_PORT']!=80){
                 <tr>
                     <td>locale</td>
                     <td>String</td>
-                    <td >false</td>
+                    <td>false</td>
                     <td>服务端响应的语种，目前支持zh_CN, en_US两种，不指定或指定错时全默认zh_CN</td>
                 </tr>
                 <tr>
                     <td>version</td>
                     <td>String</td>
-                    <td >0.1.0</td>
-                    <td>版本号，三段式，每段最大值254，即最大版本号254.254.254，最小0.0.1</td>
+                    <td>false/td>
+                    <td>如：0.1.0。版本号，三段式，每段最大值254，即最大版本号254.254.254，最小0.0.1</td>
                 </tr>
             </tbody>
             </table>
