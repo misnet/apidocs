@@ -22,11 +22,8 @@ $('.apilist li a[data-method]').on('click',function(){
     loadApiMethod(method);
 });
 
-if(location.hash){
-    var hash = location.hash.substring(1);
-    loadApiMethod(hash);
-}
 function loadApiMethod(method){
+    changeCollapse($('#tb-public-params'), $('#btn-public-params-collapse'), false);
     $('#api_detail_section').removeClass('hide');
     $('#anchor').attr('name',method);
     $('.apilist li.cur').removeClass('cur');
@@ -138,3 +135,28 @@ $.ajax({
         alert('异常响应示例加载失败');
     }
 });
+
+function changeCollapse(el, btn, isClose){
+    if(isClose){
+        $(el).addClass('in');
+        btn.text('隐藏');
+    }else{
+        $(el).removeClass('in');
+        btn.text('显示');
+    }
+}
+$('#btn-public-params-collapse').click(function(){
+    var btn = $('#btn-public-params-collapse');
+    if(btn.text() == '显示'){
+        changeCollapse($('#tb-public-params'), btn, true);
+    }else{
+        changeCollapse($('#tb-public-params'), btn, false);
+    }
+});
+
+if(location.hash){
+    var hash = location.hash.substring(1);
+    loadApiMethod(hash);
+}else{
+    changeCollapse($('#tb-public-params'), $('#btn-public-params-collapse'), true);
+}
