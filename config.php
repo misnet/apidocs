@@ -43,7 +43,11 @@ class ApiParser
                             $jsonContent = json_decode($tmp, true);
                             if (!array_key_exists($jsonContent['id'], $this->apiList)) {
                                 $this->apiList[$jsonContent['id']] = $jsonContent;
-                                $this->apiModule[$configCategory['name']]['apis'][$jsonContent['id']] = $jsonContent['name'];
+                               if(!isset($jsonContent['name'])){
+                                   continue;
+                               }
+                                $apiName = $jsonContent['name'];
+                                $this->apiModule[$configCategory['name']]['apis'][$jsonContent['id']] = $apiName;
                             }
                         }
                     }
