@@ -38,6 +38,8 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
             content:" ";
         }
     </style>
+    <link rel="stylesheet" href="asset/prism.css" data-noprefix />
+	<script src="asset/prism.js" data-manual></script>
 </head>
 <body>
 <div class="container">
@@ -46,23 +48,22 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
     </div>
     <div class="row">
         <div class="col-sm-3">
-
-        <ul >
-            <?php
-            if(!empty($modules)){
-                foreach($modules as $apiCatalog=>$detail){
-                    echo '<li class="api-catalog"><h3 >'.$apiCatalog.'</h3><ul class="apilist">';
-                    foreach($detail['apis'] as $apiId=>$apiName){
-                        echo '<li data-method="'.$apiId.'"><a data-method="'.$apiId.'" href="#'.$apiId.'"><span>'.$apiId.'</span><p>'.$apiName.'</p></a></li>';
+            <ul >
+                <?php
+                if(!empty($modules)){
+                    foreach($modules as $apiCatalog=>$detail){
+                        echo '<li class="api-catalog"><h3 >'.$apiCatalog.'</h3><ul class="apilist">';
+                        foreach($detail['apis'] as $apiId=>$apiName){
+                            echo '<li data-method="'.$apiId.'"><a data-method="'.$apiId.'" href="#'.$apiId.'"><span>'.$apiId.'</span><p>'.$apiName.'</p></a></li>';
+                        }
+                        echo '</ul></li>';
                     }
-                    echo '</ul></li>';
                 }
-            }
-            ?>
-        </ul>
+                ?>
+            </ul>
             <div class="errorcode-panel">
-             <h2 class="apilist-error"><div>错误代码说明</div></h2>
-             <ul class="errorcode">
+            <h2 class="apilist-error"><div>错误代码说明</div></h2>
+            <ul class="errorcode">
                 <?php
                 if(!empty($errorCodeList)){
                     foreach($errorCodeList as $error){
@@ -72,8 +73,6 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
                 ?>
             </ul>
             </div>
-
-
         </div>
         <div class="col-sm-9 api-detail-panel">
             <h1 id="api_name_doctitle"></h1>
@@ -96,7 +95,17 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
                     }
                 ?>
             <p>公共参数 <a href="javascript:;" id="btn-public-params-collapse">显示</a></p>
-            <table id="tb-public-params" class="table table-bordered table-striped collapse">
+            <div id="tb-public-params" class="collapse">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#comm-struct" aria-controls="comm-struct" role="tab" data-toggle="tab">结构说明</a></li>
+                <li role="presentation"><a href="#comm-objc" aria-controls="comm-objc" role="tab" data-toggle="tab">Objective-C</a></li>
+                <li role="presentation"><a href="#comm-java" aria-controls="comm-java" role="tab" data-toggle="tab">Java</a></li>
+                <li role="presentation"><a href="#comm-ts" aria-controls="comm-ts" role="tab" data-toggle="tab">TypeScript</a></li>
+            </ul>
+
+            <div class="tab-content comm-request-struct">
+                <div role="tabpanel" class="tab-pane active" id="comm-struct">
+            <table class="table table-bordered table-striped">
             <thead>
             <tr>
             <td>名称</td>
@@ -165,14 +174,35 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
                 <tr>
                     <td>version</td>
                     <td>String</td>
-                    <td>false/td>
+                    <td>false</td>
                     <td>如：0.1.0。版本号，三段式，每段最大值254，即最大版本号254.254.254，最小0.0.1</td>
                 </tr>
             </tbody>
             </table>
             </div>
+            <div role="tabpanel" class="tab-pane" id="comm-objc">
+                    <div class="json-renderer" data-lang='objectivec'>Objective-C 代码</div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="comm-java">
+                    <div class="json-renderer" data-lang='java'>Java 代码</div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="comm-ts">
+                    <div class="json-renderer" data-lang='TypeScript'>TS 代码</div>
+                </div>
+            </div>
+
+            </div>
+        </div>
             <div id="api_detail_section" class="hide">
                 <h2>业务级请求参数</h2>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#req-struct" aria-controls="req-struct" role="tab" data-toggle="tab">结构说明</a></li>
+                    <li role="presentation"><a href="#req-objc" aria-controls="req-objc" role="tab" data-toggle="tab">Objective-C</a></li>
+                    <li role="presentation"><a href="#req-java" aria-controls="req-java" role="tab" data-toggle="tab">Java</a></li>
+                    <li role="presentation"><a href="#req-ts" aria-controls="req-ts" role="tab" data-toggle="tab">TypeScript</a></li>
+                </ul>
+                <div class="tab-content request-struct">
+                <div role="tabpanel" class="tab-pane active" id="req-struct">
                 <table class="table table-bordered table-striped">
                 <thead>
                 <tr>
@@ -186,27 +216,59 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
                 <tbody  id="request_params">
                 </tbody>
                 </table>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="req-objc">
+                    <div class="json-renderer" data-lang='objectivec'>Objective-C 代码</div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="req-java">
+                    <div class="json-renderer" data-lang='java'>Java 代码</div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="req-ts">
+                    <div class="json-renderer" data-lang='TypeScript'>TS 代码</div>
+                </div>
+                </div>
+
                 <h2>响应结果</h2>
-                <table class="table  table-striped api-response-table">
-                <thead>
-                <tr>
-                <td>名称</td>
-                <td>类型</td>
-                <td>示例值</td>
-                <td>描述</td>
-                </tr>
-                </thead>
-                <tbody  id="response_result">
-                <tr>
-                    <td>status</td>
-                    <td>Integer</td>
-                    <td>0</td>
-                    <td>状态码</td>
-                </tr>
-                </tbody>
-                </table>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#res-struct" aria-controls="res-struct" role="tab" data-toggle="tab">结构说明</a></li>
+                    <li role="presentation"><a href="#res-objc" aria-controls="res-objc" role="tab" data-toggle="tab">Objective-C</a></li>
+                    <li role="presentation"><a href="#res-java" aria-controls="res-java" role="tab" data-toggle="tab">Java</a></li>
+                    <li role="presentation"><a href="#res-ts" aria-controls="res-ts" role="tab" data-toggle="tab">TypeScript</a></li>
+                </ul>
+                <div class="tab-content response-struct">
+                    <div role="tabpanel" class="tab-pane active" id="res-struct">
+                    <table class="table  table-striped api-response-table">
+                    <thead>
+                    <tr>
+                    <td>名称</td>
+                    <td>类型</td>
+                    <td>示例值</td>
+                    <td>描述</td>
+                    </tr>
+                    </thead>
+                    <tbody  id="response_result">
+                    <tr>
+                        <td>status</td>
+                        <td>Integer</td>
+                        <td>0</td>
+                        <td>状态码</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="res-objc">
+                    <div class="json-renderer" data-lang='objectivec'>Objective-C 代码</div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="res-java">
+                    <div class="json-renderer" data-lang='java'>Java 代码</div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="res-ts">
+                    <div class="json-renderer" data-lang='TypeScript'>TS 代码</div>
+                </div>
+                </div>
+
                 <h2>响应示例</h2>
-                <pre rows="50" id="response_sample"></pre>
+                <div class="json-renderer"><pre class="line-numbers"><code class="language-json" id="response_sample"></code></pre></div>
                 <h2>异常示例(通用格式，非针对当前接口)</h2>
                 <pre id="error_response_sample"></pre>
             </div>
