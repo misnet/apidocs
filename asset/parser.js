@@ -112,6 +112,7 @@ function loadApiMethod(method){
     $('.apilist li.cur').removeClass('cur');
     $('.apilist li[data-method="'+method+'"]').addClass('cur');
     $('#api_name_doctitle').html(method);
+    $('[id^=accessLevel]').addClass('hide');
     $.ajax({
         url:'read.php?rev='+Math.random(),
         data:{'api':method},
@@ -125,6 +126,7 @@ function loadApiMethod(method){
             if(!_.isUndefined(apiProps['accessLevel'])){
                 var apiAuth = apiProps['accessLevel']==1?'true':'false';
                 $('#api_auth').text(apiAuth);
+                $(`#accessLevel-${apiProps['accessLevel']}`).removeClass('hide');
             }else{
                 $('#api_auth').text('');
             }

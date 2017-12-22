@@ -94,6 +94,8 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
                         <?php
                     }
                 ?>
+            <div id="accessLevel-2" class="alert alert-warning hide" role="alert"><strong>注意</strong> 如果传递了ACCESS_TOKEN但是已经失效，此API会报错</div>
+            <div id="accessLevel-1" class="alert alert-danger hide" role="alert"><strong>警告</strong> 此API需要合法的ACCESS_TOKEN</div>
             <p>公共参数 <a href="javascript:;" id="btn-public-params-collapse">显示</a></p>
             <div id="tb-public-params" class="collapse">
             <ul class="nav nav-tabs" role="tablist">
