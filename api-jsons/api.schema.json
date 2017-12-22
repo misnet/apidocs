@@ -1,34 +1,42 @@
 {
+    "$schema": "http://json-schema.org/draft-06/schema#",
     "title": "API说明JSON格式",
     "type": "object",
     "properties":{
         "id": {
             "type": "string",
+            "default": "console.system.test",
             "description": "是唯一标识，也是api接口要传的method内容"
         },
         "name": {
             "type": "string",
+            "default": "测试API",
             "description": "接口名称"
         },
         "description":{
             "type":"string",
+            "default": "此API用来测试系统是否正常",
             "description": "接口描述"
         },
         "namespace":{
             "type":"string",
+            "default": "Kuga\\Service\\ApiV3\\Console",
             "description": "服务端PHP要用到，即接口所在命名空间名称"
         },
         "path":{
             "type":"string",
+            "default": "./ApiV3/Frontend",
             "description": "namespace对应的映射路径"
         },
         "method":{
             "type":"string",
+            "default": "System.test",
             "description": "服务端PHP实际要调用的类和接口，采用类名.方法名方式"
         },
         "accessLevel": {
-            "description": "表示accessToken的需求等级， 值=0表示服务端对api没有accessToken的验证要求； 值=1表示api必须传递accessToken字串 值=2表示服务端对accessToken无必须要求",
             "type": "integer",
+            "default": 0,
+            "description": "表示accessToken的需求等级， 值=0表示服务端对api没有accessToken的验证要求； 值=1表示api必须传递accessToken字串 值=2表示服务端对accessToken无必须要求",
             "minimum": 0,
             "maximum": 2
         },
@@ -40,10 +48,12 @@
                 "properties": {
                     "param":{
                         "type":"string",
+                        "default": "",
                         "description": "表示要传的参数名称"
                     },
                     "required":{
                         "type":"boolean",
+                        "default": true,
                         "description": "表示是否必填项"
                     },
                     "type":{
@@ -55,15 +65,21 @@
                     },
                     "description":{
                         "type":"string",
+                        "default":"",
                         "description": "参数的描述"
                     },
                     "default":{
+                        "type":["boolean", "string", "integer", "number"],
                         "description": "参数不传值时，服务端给了这个参数的默认值"
                     }
                 },
+                "additionalProperties":false,
                 "required":[
-                    "param", "type"
-                ]
+                    "param", "type","required"
+                ],
+                "dependencies": {
+                    "required": ["default"]
+                }
             }
         },
         "response":{
@@ -83,6 +99,7 @@
                         },
                         "description":{
                             "type":"string",
+                            "default": "",
                             "description": "说明"
                         },
                         "sample":{
@@ -91,7 +108,8 @@
                         "responseItem":{
                             "type":"object",
                             "description": "节点的子节点，每一个responseItem和 节点一样",
-                            "additionalProperties": { "$ref": "#/properties/response/properties/data" }
+                            "additionalProperties": { "$ref": "#/properties/response/properties/data" },
+                            "minProperties":1
                         },
                         "hasSampleFile":{
                             "type":"boolean",
@@ -99,13 +117,15 @@
                         }
                     },
                     "required":[
-                        "type"
-                    ]
+                        "type", "description"
+                    ],
+                    "additionalProperties":false
                 }
             },
             "required":[
                 "data"
-            ]
+            ],
+            "additionalProperties":false
         }
     },
     "required":[
@@ -118,5 +138,6 @@
         "accessLevel",
         "request",
         "response"
-    ]
+    ],
+    "additionalProperties":false
 }
