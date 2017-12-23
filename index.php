@@ -6,7 +6,7 @@ $errorCodeList = $parser->getErrCodeList();
 $phpSelf = $_SERVER['PHP_SELF'];
 $urlInfo = parse_url($phpSelf);
 $baseUrl  = $_SERVER['HTTP_HOST'].dirname($urlInfo['path']);
-if($_SERVER['SERVER_PORT']!=80){
+if(preg_grep("/https/ig",$_SERVER['SERVER_PROTOCOL'])){
     $baseUrl = 'https://'.$baseUrl.'/';
 }else{
     $baseUrl = 'http://'.$baseUrl.'/';
