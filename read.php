@@ -10,7 +10,10 @@ $hasMock   = isset($_GET['mock'])?$_GET['mock']:'';
 if($apiId){
     $detail = $parser->getApiDetail($apiId);
     if($hasMock){
-        $detail = $detail['sample'];
+        $detail = [
+            "status" => 99999,
+            "data" => '请使用mock.php！'
+        ];
     }
 }else{
     $detail['status'] = 99999;
