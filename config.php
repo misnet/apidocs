@@ -123,7 +123,7 @@ class ApiParser
     private function getSample($response){
         $data = [];
         foreach ($response as $key=>$node ){
-            if($node['responseItem']){
+            if(isset($node['responseItem']) && $node['responseItem']){
 
                 if(strtolower($node['type'])=='array'){
                     $data[$key] = [$this->getSample($node['responseItem'])];
