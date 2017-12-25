@@ -90,7 +90,7 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
                 }
                 if(APIMOCK_URL){
                     ?>
-                    <p>mock地址：<a target="_blank"  data-api-base="<?php echo $baseUrl?>read.php?mock=1&api=" class="api_mock"><?php echo $baseUrl?>read.php?mock=1&api=<span data-api-id="">/接口方法</span></a></p>
+                    <p>mock地址：<a target="_blank"  data-api-base="<?php echo $baseUrl?>mock.php?api=" class="api_mock"><?php echo $baseUrl?>mock.php?api=<span data-api-id="">/接口方法</span></a></p>
                         <?php
                     }
                 ?>
