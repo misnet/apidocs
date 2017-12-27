@@ -2,17 +2,17 @@
     "id":"console.menu.delete",
     "name":"删除菜单",
     "description":"删除菜单，子菜单会被一起删除",
-    "namespace":"Kuga\\Service\\ApiV3\\Console",
-    "path":"./ApiV3/Console",
-    "method":"system.deleteMenu",
+    "namespace":"Kuga\\Api\\Console",
+    "method":"System.deleteMenu",
     "accessLevel": 1,
     "request":[
         {
             "param":"id",
             "required":true,
             "default":"",
+            "name":"菜单ID",
             "type":"String",
-            "description":"菜单ID，以这个为依据来删除菜单"
+            "description":"以这个为依据来删除菜单"
         }
     ],
     "response":{

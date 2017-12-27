@@ -2,66 +2,57 @@
     "id":"console.menu.create",
     "name":"创建菜单",
     "description":"创建菜单",
-    "namespace":"Kuga\\Service\\ApiV3\\Console",
-    "path":"./ApiV3/Console",
-    "method":"system.createMenu",
+    "namespace":"Kuga\\Api\\Console",
+    "method":"System.createMenu",
     "accessLevel": 1,
     "request":[
         {
             "param":"name",
             "required":true,
             "default":"",
+            "name":"菜单名",
             "type":"String",
-            "description":"菜单名"
+            "description":""
         },
         {
             "param":"parentId",
             "required":false,
             "default":0,
             "type":"Integer",
-            "description":"父级菜单ID"
+            "description":"",
+            "name":"父级菜单ID"
         },
         {
-            "param":"controller",
+            "param":"url",
             "required":true,
             "default":"",
+            "name":"url网址",
             "type":"String",
-            "description":"controller名"
-        },
-        {
-            "param":"action",
-            "required":true,
-            "default":"",
-            "type":"String",
-            "description":"action名"
-        },
-        {
-            "param":"parameter",
-            "required":false,
-            "default":"",
-            "type":"String",
-            "description":"参数"
+            "description":""
         },
         {
             "param":"display",
             "required":false,
             "default":"1",
+            "name":"是否显示",
             "type":"Integer",
-            "description":"是否显示"
+            "description":""
         },
         {
             "param":"sortByWeight",
             "required":false,
             "default":"0",
+            "name":"显示权重",
             "type":"Integer",
-            "description":"显示权重"
+            "description":""
         },
         {
             "param":"className",
             "required":false,
             "default":"",
+            "name":"图标样式名",
             "type":"String",
-            "description":"图标样式名"
+            "description":""
         }
     ],
     "response":{

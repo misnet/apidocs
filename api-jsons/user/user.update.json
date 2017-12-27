@@ -2,9 +2,8 @@
     "id":"console.user.update",
     "name":"修改用户",
     "description":"修改用户信息",
-    "namespace":"Kuga\\Service\\ApiV3\\Console",
-    "path":"./ApiV3/Console",
-    "method":"user.update",
+    "namespace":"Kuga\\Api\\Console",
+    "method":"User.update",
     "accessLevel": 1,
     "request":[
         {
@@ -19,7 +18,7 @@
             "required":true,
             "default":"",
             "type":"String",
-            "description":"用户名"
+            "description":"描述"
         },
         {
             "param":"password",

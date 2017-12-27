@@ -56,6 +56,23 @@ function loadApiMethod(method){
         }
     });
 }
+
+function _parseRequestParamJsonString(param){
+    var html = [];
+    html.push('<table class="table table-bordered table-striped"><thead>');
+    html.push('<tr><td colspan="5">JSON对象类型：'+param['requestItemType']+'</td></tr>');
+    html.push('<tr><td>参数</td><td>类型</td><td>是否必填</td><td>默认值</td><td>描述</td></tr></thead><tbody>');
+    for(var j in param['requestItem']){
+        var p = param['requestItem'][j];
+        html.push('<tr><td >'+p['param']+'</td>');
+        html.push('<td>'+p['type']+'</td>');
+        html.push('<td>'+p['required']+'</td>');
+        html.push('<td>'+p['default']+'</td>');
+        html.push('<td>'+p['description']+'</td></tr>');
+    }
+    html.push('</tbody></table>');
+    return html.join('');
+}
 //加载请求参数说明
 function _loadRequestParams(method,resp){
     $('#request_params').empty();
@@ -63,11 +80,26 @@ function _loadRequestParams(method,resp){
         var params = resp['request'];
         for(var p in params){
             var html = [];
-            html.push('<tr><td>'+params[p]['param']+'</td>');
+            var isJsonParams = false;
+            if( params[p]['type'].toLowerCase()=='jsonstring'
+                && params[p]['requestItem']
+                && params[p]['requestItemType']){
+                isJsonParams = true;
+            }
+            html.push('<tr><td '+(isJsonParams?' rowspan="2"':'')+'>'+params[p]['param']+'</td>');
             html.push('<td>'+params[p]['type']+'</td>');
             html.push('<td>'+params[p]['required']+'</td>');
             html.push('<td>'+params[p]['default']+'</td>');
             html.push('<td>'+params[p]['description']+'</td>');
+            html.push('</tr>');
+            if(params[p]['type'].toLowerCase()=='jsonstring'){
+                html.push('<tr><td colspan="4">'+_parseRequestParamJsonString(params[p])+'</td></tr>');
+            }
+            $('#request_params').append(html.join(''));
+        }
+        if(params.length==0){
+            var html = [];
+            html.push('<tr><td colspan="5">无</td>');
             html.push('</tr>');
             $('#request_params').append(html.join(''));
         }

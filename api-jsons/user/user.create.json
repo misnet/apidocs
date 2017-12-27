@@ -2,31 +2,33 @@
     "id":"console.user.create",
     "name":"创建用户",
     "description":"创建后台用户账号",
-    "namespace":"Kuga\\Service\\ApiV3\\Console",
-    "path":"./ApiV3/Console",
-    "method":"user.create",
+    "namespace":"Kuga\\Api\\Console",
+    "method":"User.create",
     "accessLevel": 1,
     "request":[
         {
             "param":"username",
             "required":true,
             "default":"",
+            "name":"用户名",
             "type":"String",
-            "description":"用户名"
+            "description":"描述"
         },
         {
             "param":"password",
             "required":true,
             "default":"",
             "type":"String",
-            "description":"密码"
+            "description":"密码",
+            "name":"密码"
         },
         {
             "param":"mobile",
             "required":true,
             "default":"",
             "type":"String",
-            "description":"手机号"
+            "description":"手机号",
+            "name":"手机号"
         }
     ],
     "response":{

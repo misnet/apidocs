@@ -120,7 +120,9 @@ sample、responseItem属性，如果是response/data这个对象还可能有hasS
 - description: 参数的描述
 - default: 参数不传值时，服务端给了这个参数的默认值
 - required: true或false，表示是否必填项
-- type:参数类型，值有String，Integer，Float，Boolean四种
+- type:参数类型，值有String，Integer，Float，Boolean，JsonString五种。JsonString表示当前参数是一个json enode后的String类型的字串
+- requestItem：当type为JsonString时，requestItem里会有json字串的组成属性，和request的基本节点一样，有type，param，default，required，description属性
+- requestItemType：Object或Array，指的是当前参数在json encode之前是什么样的
 
 ### 每一个response节点的属性说明
 - type：有Boolean、Object、Array、String、Integer

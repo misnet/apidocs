@@ -2,15 +2,15 @@
     "id":"console.menu.list",
     "name":"菜单列表",
     "description":"获取菜单列表",
-    "namespace":"Kuga\\Service\\ApiV3\\Console",
-    "path":"./ApiV3/Console",
-    "method":"system.listMenu",
+    "namespace":"Kuga\\Api\\Console",
+    "method":"System.listMenu",
     "accessLevel": 2,
     "request":[
         {
             "param":"page",
             "required":false,
             "default":1,
+            "name":"页码",
             "type":"Integer",
             "description":"页码"
         },
@@ -19,7 +19,8 @@
             "required":false,
             "default":10,
             "type":"Integer",
-            "description":"每页显示条数"
+            "description":"每页显示条数",
+            "name":"每页显示条数"
         }
     ],
     "response":{
@@ -30,16 +31,7 @@
                 "list":{
                     "type":"Array",
                     "responseItem":{
-                        "action":{
-                            "type":"String",
-                            "sample":"add",
-                            "description":"action名称"
-                        },
-                        "controller":{
-                            "type":"String",
-                            "sample":"user",
-                            "description":"controller名称"
-                        },
+
                         "display":{
                             "type":"Integer",
                             "sample":1,
@@ -60,10 +52,10 @@
                             "sample":0,
                             "description":"菜单父级ID"
                         },
-                        "parameter":{
+                        "url":{
                             "type":"String",
                             "sample":"",
-                            "description":"菜单菜单列"
+                            "description":"菜单网址"
                         },
                         "sortByWeight":{
                             "type":"Integer",

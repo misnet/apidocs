@@ -1,10 +1,9 @@
 {
-    "id":"console.system.batchrequest",
+    "id":"common.batchrequest",
     "name":"接口批量操作",
     "description":"批量执行多个API接口",
-    "namespace":"Kuga\\Service\\ApiV3\\Console",
-    "path":"./ApiV3/Console",
-    "method":"system.batchRequest",
+    "namespace":"Kuga\\Api\\Console",
+    "method":"Common.batchRequest",
     "accessLevel": 0,
     "disableFilterParams":true,
     "request":[]

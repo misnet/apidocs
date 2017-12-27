@@ -1,15 +1,16 @@
 {
-    "id":"console.user.list",
-    "name":"获取用户列表",
-    "description":"后台用户账号列表",
+    "id":"console.role.list",
+    "name":"角色列表",
+    "description":"获取角色列表",
     "namespace":"Kuga\\Api\\Console",
-    "method":"User.userList",
-    "accessLevel": 1,
+    "method":"Acc.listRole",
+    "accessLevel": 2,
     "request":[
         {
             "param":"page",
             "required":false,
             "default":1,
+            "name":"页码",
             "type":"Integer",
             "description":"页码"
         },
@@ -18,41 +19,53 @@
             "required":false,
             "default":10,
             "type":"Integer",
-            "description":"每页显示条数"
+            "description":"每页显示条数",
+            "name":"每页显示条数"
         }
     ],
     "response":{
         "data":{
             "type":"Object",
-            "hasSampleFile":true,
+            "hasSampleFile":false,
             "responseItem": {
                 "list":{
                     "type":"Array",
                     "responseItem":{
-                        "uid":{
+
+                        "id":{
                             "type":"Integer",
                             "sample":1,
-                            "description":"用户ID"
+                            "description":"角色ID"
                         },
-                        "username":{
+                        "name":{
                             "type":"String",
-                            "sample":"Donny",
-                            "description":"用户名"
+                            "sample":"管理员",
+                            "description":"角色名称"
                         },
-                        "createTime":{
-                            "type":"Integer",
-                            "sample":1405906107,
-                            "description":"创建时间"
-                        },
-                        "gender":{
+                        "roleType":{
                             "type":"Integer",
                             "sample":1,
-                            "description":"性别，1男，0女，2保密"
+                            "description":"角色类型，1为超级管理员，0为普通角色"
                         },
-                        "mobile":{
-                            "type":"String",
-                            "sample":15800000000,
-                            "description":"手机号"
+                        "assignPolicy":{
+                            "type":"Integer",
+                            "sample":0,
+                            "description":"分配策略，0不自动分配，1自动分配给已登陆用户，2自动分配给未登陆用户"
+                        },
+                        "defaultAllow":{
+                            "type":"Integer",
+                            "sample":0,
+                            "description":"默认权限，0禁止，1允许"
+                        },
+                        "priority":{
+                            "type":"Integer",
+                            "sample":1,
+                            "description":"优先级，越小越优先"
+                        },
+                        "cntUser":{
+                            "type":"Integer",
+                            "sample":100,
+                            "description":"用户数量"
                         }
                     },
                     "description":"数据列表"
