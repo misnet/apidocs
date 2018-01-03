@@ -3,15 +3,7 @@ include_once 'config.php';
 $parser = new ApiParser(API_ROOT_DIR);
 $modules= $parser->getApiModule();
 $errorCodeList = $parser->getErrCodeList();
-$phpSelf = $_SERVER['PHP_SELF'];
-$urlInfo = parse_url($phpSelf);
-$baseUrl  = $_SERVER['HTTP_HOST'].dirname($urlInfo['path']);
-if(preg_grep("/https/ig",$_SERVER['SERVER_PROTOCOL'])){
-    $baseUrl = 'https://'.$baseUrl.'/';
-}else{
-    $baseUrl = 'http://'.$baseUrl.'/';
-}
-$baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
+
 ?>
 <html>
 <head>
@@ -37,6 +29,7 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
             display:block;
             content:" ";
         }
+        h4.panel-title a{ display:block;}
     </style>
     <link rel="stylesheet" href="asset/prism.css" data-noprefix />
 	<script src="asset/prism.js" data-manual></script>
@@ -48,19 +41,40 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
     </div>
     <div class="row">
         <div class="col-sm-3">
-            <ul >
+            <div class="api-filter">
+                <label><input type="checkbox" checked data-filter="console" /> 后台</label>
+                <label><input type="checkbox" checked data-filter="frontend" /> 前端</label>
+                <label><input type="checkbox" checked data-filter="common" /> 公共</label>
+            </div>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 <?php
                 if(!empty($modules)){
+                    $index = 1;
                     foreach($modules as $apiCatalog=>$detail){
-                        echo '<li class="api-catalog"><h3 >'.$apiCatalog.'</h3><ul class="apilist">';
+                        ?>
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+        <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-<?php echo $index; ?>" aria-expanded="true" aria-controls="collapse-<?php echo $index; ?>">
+            <?php echo $apiCatalog ?></a>
+        </h4>
+    </div>
+    <div id="collapse-<?php echo $index; ?>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+        <ul class="apilist list-group">
+                        <?php
+                        $index++;
                         foreach($detail['apis'] as $apiId=>$apiName){
-                            echo '<li data-method="'.$apiId.'"><a data-method="'.$apiId.'" href="#'.$apiId.'"><span>'.$apiId.'</span><p>'.$apiName.'</p></a></li>';
+                            echo '<li data-method="'.$apiId.'" class="list-group-item"><a data-method="'.$apiId.'" href="#'.$apiId.'"><span>'.$apiId.'</span><p>'.$apiName.'</p></a></li>';
                         }
-                        echo '</ul></li>';
+                        ?>
+        </ul>
+    </div>
+</div>
+                        <?php
                     }
                 }
                 ?>
-            </ul>
+        </div>
             <div class="errorcode-panel">
             <h2 class="apilist-error"><div>错误代码说明</div></h2>
             <ul class="errorcode">
@@ -90,7 +104,7 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
                 }
                 if(APIMOCK_URL){
                     ?>
-                    <p>mock地址：<a target="_blank"  data-api-base="<?php echo $baseUrl?>mock.php?api=" class="api_mock"><?php echo $baseUrl?>mock.php?api=<span data-api-id="">/接口方法</span></a></p>
+                    <p>mock地址：<a target="_blank"  data-api-base="<?php echo APIMOCK_URL?>mock.php?api=" class="api_mock"><?php echo APIMOCK_URL?>mock.php?api=<span data-api-id="">/接口方法</span></a></p>
                         <?php
                     }
                 ?>
@@ -282,6 +296,32 @@ $baseUrl = preg_replace('/\/{1,}$/','/', $baseUrl);
 <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js"></script>
 <script type="text/javascript" src="asset/parser.js?v=0.31"></script>
-
+<script>
+$('.api-filter input[type=checkbox]').change((e)=>{
+    let checkbox = $(e.target);
+    let filter = checkbox.data('filter');
+    //console.log(checkbox.prop('checked'), checkbox.data('filter'));
+    let apis = $('li[data-method]').filter((i,item)=>{
+        switch(filter){
+            case "console":return /^console\./ig.test($(item).data('method'));
+            case "common":return /^common\./ig.test($(item).data('method'));
+            case "frontend":return /^frontend\./ig.test($(item).data('method'));
+        }
+        return true;
+    });
+    if(checkbox.prop('checked')){
+        apis.removeClass('hide').addClass('show');
+    }else{
+        apis.removeClass('show').addClass('hide');
+    }
+    $('.panel').each((index, panel)=>{
+        if($(panel).find('li.hide').length == $(panel).find('li').length){
+            $(panel).removeClass('show').addClass('hide');
+        }else{
+            $(panel).removeClass('hide').addClass('show');
+        }
+    });
+});
+</script>
 </body>
 </html>
