@@ -4,7 +4,7 @@ export default {
   //"hash":true,
   "entry": "src/index.js",
   "outputPath":path.resolve(__dirname, '../asset'),
-  "publicPath":"./",
+  "publicPath":"./asset/",
   "output":{
     "crossOriginLoading":"anonymous"
   },
