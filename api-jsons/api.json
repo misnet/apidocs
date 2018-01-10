@@ -1,12 +1,28 @@
 [
     {
-        "name":"后台用户API",
-        "summary":"提供了后台用户的相关API",
-        "apiFiles":"user/*.json"
+        "name":"后台API",
+        "summary":"提供了后台相关API",
+        "children":[
+            {
+                "name":"用户账号API",
+                "summary":"用户资料管理相关API",
+                "apiFiles":"user/*.json"
+            },
+            {
+                "name":"角色API",
+                "summary":"角色与权限管理相关API",
+                "apiFiles":"system/role.*.json"
+            },
+            {
+                "name":"菜单API",
+                "summary":"菜单管理相关API",
+                "apiFiles":"system/menu.*.json"
+            }
+        ]
     },
     {
-        "name":"系统API",
+        "name":"公共API",
         "summary":"提供了系统级的相关API",
-        "apiFiles":"system/*.json"
+        "apiFiles":"system/common.*.json"
     }
 ]

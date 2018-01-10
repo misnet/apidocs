@@ -23,10 +23,74 @@ class ApiParser
     private $samplePath;
     private $apiList = [];
     private $apiModule = [];
+    private $globalParameter=[];
     public function __construct($rootDir)
     {
         $this->rootDir = $rootDir;
         $this->init();
+    }
+    /**
+     * 解析某个目录
+     * @param $moduleName
+     * @param $dirName
+     */
+    private function _parseJsonDir(&$module,$dirName){
+        foreach (glob($dirName.DS.'*') as $filename) {
+            if(is_dir($filename)){
+                $this->_parseJsonDir($module,$filename);
+            }else{
+                $this->_parseJsonFile($module,$filename);
+            }
+        }
+    }
+
+    /**
+     * 解析单个json文件
+     * @param $moduleName
+     * @param $filename
+     */
+    private function _parseJsonFile(&$module,$filename){
+        $tmp = file_get_contents($filename);
+        $jsonContent = json_decode($tmp, true);
+        if (!array_key_exists($jsonContent['id'], $this->apiList)) {
+            $this->apiList[$jsonContent['id']] = $jsonContent;
+            $module['apis'][$jsonContent['id']] = [
+                'name'=>$jsonContent['name'],
+                'id'=>$jsonContent['id']
+            ];
+        }
+
+    }
+
+    /**
+     * 取得花
+     * @return array|mixed
+     */
+    public function getGlobalParameter(){
+        $configFile = $this->rootDir.DS.'global.json';
+        $configContent = file_get_contents($configFile);
+        $configArray = json_decode($configContent, true);
+        return $configArray?$configArray:[];
+    }
+    private function _parseApiModule(&$module){
+        if(isset($module['children'])){
+            $j = 0;
+            foreach($module['children'] as &$childModule){
+                $this->_parseApiModule($childModule);
+                $j++;
+            }
+        }else{
+            if (isset($module['apiFiles'])) {
+
+                foreach (glob($this->rootDir . DS . $module['apiFiles']) as $filename) {
+                    if(is_dir($filename)){
+                        $this->_parseJsonDir($module,$filename);
+                    }else{
+                        $this->_parseJsonFile($module,$filename);
+                    }
+                }
+            }
+        }
     }
     private function init(){
         if (empty($this->apiList)) {
@@ -34,19 +98,12 @@ class ApiParser
             if (file_exists($configFile)) {
                 $configContent = file_get_contents($configFile);
                 $configArray = json_decode($configContent, true);
+                $index = 0;
                 foreach ($configArray as $configCategory) {
-                    $this->apiModule[$configCategory['name']] = $configCategory;
-                    if (isset($configCategory['apiFiles'])) {
-                        foreach (glob($this->rootDir . DS . $configCategory['apiFiles']) as $filename) {
-                            $tmp = file_get_contents($filename);
-                            $filename    = basename($filename);
-                            $jsonContent = json_decode($tmp, true);
-                            if (!array_key_exists($jsonContent['id'], $this->apiList)) {
-                                $this->apiList[$jsonContent['id']] = $jsonContent;
-                                $this->apiModule[$configCategory['name']]['apis'][$jsonContent['id']] = $jsonContent['name'];
-                            }
-                        }
-                    }
+                    $this->apiModule[$index] = $configCategory;
+                    $this->apiModule[$index]['id'] = $index;
+                    $this->_parseApiModule($this->apiModule[$index]);
+                    $index++;
                 }
             }
         }
@@ -96,7 +153,10 @@ class ApiParser
 
             //sample目录下有例子文件，且hasSampleFile为true
             if(isset($data['hasSampleFile']) && $data['hasSampleFile']){
-                $sampleFile = API_ROOT_DIR.DS.'sample/'.$apiId.'.json';
+                $key = $apiId;
+                $key = ltrim($key,'/');
+                $sampleFile = API_ROOT_DIR.DS.'sample/'.$key.'.json';
+
                 if(file_exists($sampleFile)){
                     $sampleContent = file_get_contents($sampleFile);
                     $sampleData    = json_decode($sampleContent,true);
@@ -105,7 +165,7 @@ class ApiParser
                 //生成sample
 
                 $response = $this->getSample($apiData['response']);
-                $response['status'] = 0;
+                $response['code'] = 0;
                 $sampleData = $response;
             }
         }
@@ -114,13 +174,12 @@ class ApiParser
 
     /**
      * 解析api json文件的response部分，生成sample
-     * @return array [data,status]
+     * @return array [data,code]
      */
     private function getSample($response){
         $data = [];
         foreach ($response as $key=>$node ){
             if($node['responseItem']){
-
                 if(strtolower($node['type'])=='array'){
                     $data[$key] = [$this->getSample($node['responseItem'])];
                 }else{

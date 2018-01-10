@@ -7,20 +7,18 @@
     "accessLevel": 2,
     "request":[
         {
-            "param":"page",
+            "param":"pid",
             "required":false,
-            "default":1,
-            "name":"页码",
+            "default":0,
             "type":"Integer",
-            "description":"页码"
+            "description":"上级菜单ID"
         },
         {
-            "param":"limit",
+            "param":"rid",
             "required":false,
-            "default":10,
+            "default":"",
             "type":"Integer",
-            "description":"每页显示条数",
-            "name":"每页显示条数"
+            "description":"指定角色，如果有指定角色，会多返回一个allow字段，表明这个角色有没权限访问"
         }
     ],
     "response":{
@@ -62,10 +60,10 @@
                             "sample":1,
                             "description":"排序权重"
                         },
-                        "extName":{
-                            "type":"String",
-                            "sample":"article",
-                            "description":"扩展插件名称"
+                        "allow":{
+                            "type":"Integer",
+                            "sample":1,
+                            "description":"指定角色时，会返回这个属性，1表示有权访问，0表示无权访问"
                         }
                     },
                     "description":"数据列表"

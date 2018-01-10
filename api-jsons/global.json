@@ -1,0 +1,42 @@
+[
+  {
+    "param": "locale",
+    "required": false,
+    "default": "zh_CN",
+    "name": "语种",
+    "type": "String",
+    "description": "服务端响应的语种，目前支持zh_CN, en_US两种，不指定或指定错时全默认zh_CN"
+  },
+  {
+    "param": "sign",
+    "required": true,
+    "default": "ibuaiVcKdpRxkhJA",
+    "type": "String",
+    "description": "将所有参数按字母a-z顺序排序，以Key+Value的形式串起来，头尾再加上appSecret值",
+    "name": "请求签名"
+  },
+  {
+    "param": "appkey",
+    "required": true,
+    "default": "10086",
+    "type": "String",
+    "description": "系统应用识别码",
+    "name": "应用ID"
+  },
+  {
+    "param": "version",
+    "required": false,
+    "default": "1",
+    "type": "String",
+    "description": "版本号 默认最新版本",
+    "name": "版本号"
+  },
+  {
+    "param": "method",
+    "required": true,
+    "default": "",
+    "type": "String",
+    "description": "要调用的API接口名称",
+    "name": "API接口名称"
+  }
+]
