@@ -18,10 +18,12 @@ npm run build
 ```
 注：src/common/config.js中可修改自己的配置
 
+演示示例：http://apidocs.kity.me/
 ## 项目运行方式
 查看apidoc的方式 http://localhost/apidocs/index.php
 
 mock服务 http://localhost/apidocs/read.php?mock=1&api=接口的ID
+
 
 
 ## api-jsons目录说明
