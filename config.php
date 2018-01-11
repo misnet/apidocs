@@ -2,7 +2,7 @@
 /**
  * 配置文件及API接口文件解析器
  * @author Donny
- * 
+ *
  */
 
 $dir = realpath('api-jsons');
@@ -179,7 +179,7 @@ class ApiParser
     private function getSample($response){
         $data = [];
         foreach ($response as $key=>$node ){
-            if($node['responseItem']){
+            if(isset($node['responseItem'])){
                 if(strtolower($node['type'])=='array'){
                     $data[$key] = [$this->getSample($node['responseItem'])];
                 }else{
