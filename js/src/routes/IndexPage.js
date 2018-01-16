@@ -31,7 +31,7 @@ export default class IndexPage extends Component {
     //   payload:{firstLoad:true}
     // });
 
-    
+
   }
   componentWillReceiveProps(nextProps){
 
@@ -52,7 +52,7 @@ export default class IndexPage extends Component {
         payload:item.key
       });
     }else{
-      const [parentId,childId] = Array.from(item.key).filter(x=>x!=='.');
+      const [parentId,childId] = item.key.split('.').filter(x=>x!=='.');
       dispatch({
         type:'apiData/selectApiModule',
         payload:parentId + '.' + childId
@@ -64,7 +64,7 @@ export default class IndexPage extends Component {
     const apiModuleDetail = apiNavs.length>0?apiNavs[apiNavs.length-1]:{apis:{},name:'',summary:''};
     let index = 0;
     let apiList = [];
-    
+
     apiList = Object.values(apiModuleDetail.apis);
     return (
       <Layout>
@@ -112,7 +112,7 @@ export default class IndexPage extends Component {
                 description={apiModuleDetail.summary}
                 apiList={apiList}
               />:null}
-              
+
             </Content>
           </Layout>
         </Layout>

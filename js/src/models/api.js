@@ -28,7 +28,7 @@ export default {
     },
     errorCodeList:[]
   },
-  
+
   subscriptions:{
     //列出所有api模块
     setup({dispatch},done){
@@ -38,13 +38,13 @@ export default {
       });
     }
   },
-  
+
 
   effects: {
     /**
      * 取得errorCode列表
-     * @param {*} param0 
-     * @param {*} param1 
+     * @param {*} param0
+     * @param {*} param1
      */
     * listErrorCodeList({payload},{call,put}){
       const responseData = yield call(queryErrorCodeList,payload);
@@ -107,11 +107,11 @@ export default {
       });
     },
     /**
-     * 
+     *
      * 请求Api Module tree
      */
     *listApiModules({ payload }, { call, put }) {  // eslint-disable-line
-      
+
       const responseData = yield call(queryApiTree,payload);
       let tree=[];
       forEach(responseData,(value,key)=>{
@@ -143,7 +143,7 @@ export default {
 
   reducers: {
     save(state, action) {
-      return { ...state, 
+      return { ...state,
         apiModules:action.payload };
     },
     changeGlobalParamsLoading(state,action){
@@ -154,8 +154,8 @@ export default {
     },
     /**
      * globalParams存储
-     * @param {*} state 
-     * @param {*} action 
+     * @param {*} state
+     * @param {*} action
      */
     saveParams(state,action){
       return {
@@ -172,7 +172,7 @@ export default {
       if(action.payload.indexOf('.')==-1){
         navs.push(state.apiModules[action.payload]);
       }else{
-        const [parentId,childId] = Array.from(action.payload).filter(x=>x!=='.');
+        const [parentId,childId] = action.payload.split('.').filter(x=>x!=='.');
         navs.push(state.apiModules[parentId]);
         navs.push(state.apiModules[parentId]['children'][childId]);
       }
@@ -184,8 +184,8 @@ export default {
     },
     /**
      * apiDetail数据存储
-     * @param {*} state 
-     * @param {*} action 
+     * @param {*} state
+     * @param {*} action
      */
     saveApiDetail(state,action){
 
@@ -193,7 +193,7 @@ export default {
       //根据这个id定位到所在的api module
       const {id} = action.payload;
       let detailNavs = [];
-      
+
       state.apiModules.map(item=>{
         if(item.children){
           item.children.map(childItem=>{
@@ -223,8 +223,8 @@ export default {
     },
     /**
      * errorCodeList数据存储
-     * @param {*} state 
-     * @param {*} action 
+     * @param {*} state
+     * @param {*} action
      */
     saveErrorCode(state,action){
       return {

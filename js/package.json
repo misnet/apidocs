@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "start": "roadhog dev",
+    "start": "roadhog server",
     "build": "roadhog build"
   },
   "engines": {
@@ -27,6 +27,7 @@
     "eslint-plugin-html": "^4.0.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^7.5.1",
     "expect": "^1.20.2",
     "husky": "^0.12.0",
     "redbox-react": "^1.4.3",
