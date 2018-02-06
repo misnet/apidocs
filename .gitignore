@@ -4,5 +4,6 @@
 .buildpath
 .vscode
 .gitkeep
+.idea
 node_modules
 stubs

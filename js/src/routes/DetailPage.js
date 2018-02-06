@@ -5,11 +5,12 @@
 import {connect} from 'dva';
 import {Component} from 'react';
 import {keys} from 'lodash';
-import { Card, Layout, Menu, Breadcrumb, Icon,Table } from 'antd';
+import { Card, Layout, Menu, Breadcrumb, Icon,Table,Button } from 'antd';
 import GlobalParameters from '../components/GlobalParameters';
 import RequestGateway from '../components/RequestGateway';
 import ApiDetail from '../components/ApiDetail';
 import DocHeader from '../components/Header';
+import TestTool from '../components/TestTool';
 import Config from '../common/config';
 import {Link} from 'dva/router';
 const { SubMenu } = Menu;
@@ -23,7 +24,7 @@ export default class DetailPage extends Component {
   constructor(props){
     super(props);
     this.state = {
-      navs:[]
+      apiTestToolVisible:false
     }
   }
   componentDidMount(){
@@ -49,8 +50,14 @@ export default class DetailPage extends Component {
       payload:item.key
     });
   }
+
+  toggleApiTestTool=()=>{
+    this.setState({
+      apiTestToolVisible:!this.state.apiTestToolVisible
+    });
+  }
   render() {
-    const {apiData:{apiCurUrl,detailNav, apiDetail,globalParams,globalParamsLoading,errorCodeList}} = this.props;
+    const {apiData:{apiCurUrl,detailNav, apiDetail,globalParams,globalParamsLoading,errorCodeList,setting}} = this.props;
     let index = 0;
     const errorColumns = [
       {
@@ -70,6 +77,10 @@ export default class DetailPage extends Component {
       for (let key in apiModuleDetail.apis){
         apiList.push(apiModuleDetail.apis[key]);
       }
+    }
+    let apiHost = Config.API_HOST;
+    if(setting.host){
+      apiHost = setting.host;
     }
     return (
       <Layout>
@@ -108,9 +119,20 @@ export default class DetailPage extends Component {
               <p>{apiDetail.description}</p>
               </Card>
               <RequestGateway
-               gatewayUrl={apiDetail.id?Config.API_HOST + apiDetail.id:''}
+               gatewayUrl={apiDetail.id?apiHost + apiDetail.id:''}
                 mockUrl={apiDetail.id?Config.MOCK_HOST + apiDetail.id:''}
               />
+              <p><Button type="primary" onClick={this.toggleApiTestTool}>API测试工具</Button></p>
+              <Card title="API测试工具"  style={{margin:'10px 0',display:this.state.apiTestToolVisible?'block':'none'}}>
+                <TestTool
+                  globalParams={globalParams}
+                  privateParams={apiDetail.request}
+                  accessLevel={apiDetail.accessLevel}
+                  gatewayUrl={apiDetail.url?apiHost + apiDetail.url:''}
+                  gatewayHost={apiHost}
+                />
+
+              </Card>
               <Card title="公共参数">
                 <GlobalParameters 
                 accessTokenRequired={apiDetail.accessLevel>0}

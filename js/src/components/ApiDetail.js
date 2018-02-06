@@ -51,9 +51,9 @@ const responseColumns = [{
     className:styles.autobreak,
     render:(text,record)=>{
         if(typeof record.sample=='object'){
-            return JSON.stringify(record.sample)
+            return JSON.stringify(record.sample);
         }else{
-            return record.sample
+            return record.sample;
         }
     },
     dataIndex:'sample'
@@ -64,7 +64,7 @@ const responseColumns = [{
     dataIndex:'description'
 }];
 
-function getRequestItem(node){
+function getRequestItem(node,key){
     let newNode = Object.assign({},node);
     if(newNode.type && newNode.type.toLowerCase()=='jsonstring'
         && newNode.requestItem
@@ -72,7 +72,7 @@ function getRequestItem(node){
         newNode.children = [];
         newNode.type = newNode.requestItemType;
         for(let k in newNode.requestItem){
-            newNode.children.push(getRequestItem(newNode.requestItem[k]));
+            newNode.children.push(getRequestItem(newNode.requestItem[k],key+'.'+k));
         }
         delete(newNode.requestItem);
         delete(newNode.requestItemType);

@@ -1,5 +1,30 @@
-import {queryApiTree, queryGlobalParams, queryApiList, queryApiDetail,queryErrorCodeList} from '../services/api';
+import {queryApiTree, queryGlobalParams, queryApiList, queryApiDetail,queryErrorCodeList,apiRequest} from '../services/api';
 import {forEach} from 'lodash';
+function getDetailNav (item, url, detailNavs) {
+  if (!detailNavs) {
+    detailNavs = [];
+  }
+  if (item.children) {
+    item.children.map(childItem => {
+      getDetailNav(childItem, url, detailNavs);
+      for (var childKey in childItem.apis) {
+        if (childKey == url) {
+          detailNavs.push(item);
+          detailNavs.push(childItem);
+          break;
+        }
+      }
+    });
+  } else {
+    for (var key in item.apis) {
+      if (key == url) {
+        detailNavs.push(item);
+        break;
+      }
+    }
+  }
+}
+
 export default {
 
   namespace: 'apiData',
@@ -26,7 +51,17 @@ export default {
       response:{},
       responseSample:{}
     },
-    errorCodeList:[]
+    errorCodeList:[],
+    //API执行结果
+    apiRequestResult: null,
+    //右上角的设置
+    setting: {
+      host:'',
+      appKey: '',
+      appSecret: '',
+      consoleToken: '',
+      memberToken:''
+    },
   },
 
   subscriptions:{
@@ -139,12 +174,68 @@ export default {
       //   payload:moduleDetail
       // });
     },
+
+    //执行API请求
+    * doApiRequest({payload},{call,put}){
+      //先清空
+       yield put({
+         type:'saveApiResonseData',
+         payload:null
+       });
+      const responseData = yield call(apiRequest,payload);
+      yield put({
+        type:'saveApiResonseData',
+        payload:responseData
+      });
+   },
+    * saveSetting ({payload}, {put}) {
+      yield put({
+        type: 'saveSettingToStorage',
+        payload
+      });
+    },
+    * getSetting (_, {put}) {
+      let payload = sessionStorage.getItem('setting');
+      try {
+        payload = JSON.parse(payload);
+      } catch (e) {
+        console.log(e);
+      }
+      if(!payload){
+        payload = {
+          appKey: '',
+          appSecret: '',
+          consoleToken: ''
+        };
+      }
+      yield put({
+        type: 'saveSettingToStorage',
+        payload
+      });
+    },
   },
 
   reducers: {
     save(state, action) {
       return { ...state,
         apiModules:action.payload };
+    },
+
+    //保存API执行结果
+    saveApiResonseData(state,action){
+      return {
+        ...state,
+        apiRequestResult:action.payload
+      };
+    },
+    saveSettingToStorage (state, action) {
+      if (sessionStorage) {
+        sessionStorage.setItem('setting', JSON.stringify(action.payload));
+      }
+      return {
+        ...state,
+        setting: action.payload
+      };
     },
     changeGlobalParamsLoading(state,action){
       return{
@@ -172,9 +263,25 @@ export default {
       if(action.payload.indexOf('.')==-1){
         navs.push(state.apiModules[action.payload]);
       }else{
-        const [parentId,childId] = action.payload.split('.').filter(x=>x!=='.');
-        navs.push(state.apiModules[parentId]);
-        navs.push(state.apiModules[parentId]['children'][childId]);
+        //const [parentId,childId] = action.payload.split('.').filter(x=>x!=='.');
+        //navs.push(state.apiModules[parentId]);
+        //navs.push(state.apiModules[parentId]['children'][childId]);
+
+        const navIds = action.payload.split('.').filter(x => x !== '.');
+        let nextNode = [];
+        let nextIndex = 0;
+        for (let index in  navIds) {
+          let nid = navIds[index];
+          if (nextIndex == 0) {
+            nextNode = state.apiModules;
+          } else {
+            nextNode = nextNode['children'];
+          }
+          navs.push(nextNode[nid]);
+          nextNode = nextNode[nid];
+          nextIndex++;
+        }
+
       }
       return {
         ...state,
@@ -193,33 +300,36 @@ export default {
       //根据这个id定位到所在的api module
       const {id} = action.payload;
       let detailNavs = [];
-
       state.apiModules.map(item=>{
-        if(item.children){
-          item.children.map(childItem=>{
-            for(var childKey in childItem.apis){
-              if(childKey==id){
-                detailNavs.push(item);
-                detailNavs.push(childItem);
-                break;
-              }
-            }
-          })
-        }else{
-          for(var key in item.apis){
-            if(key==id){
-              detailNavs.push(item);
-              break;
-            }
-          }
-        }
+        getDetailNav(item, id, detailNavs);
       });
+
+      // state.apiModules.map(item=>{
+      //   if(item.children){
+      //     item.children.map(childItem=>{
+      //       for(var childKey in childItem.apis){
+      //         if(childKey==id){
+      //           detailNavs.push(item);
+      //           detailNavs.push(childItem);
+      //           break;
+      //         }
+      //       }
+      //     })
+      //   }else{
+      //     for(var key in item.apis){
+      //       if(key==id){
+      //         detailNavs.push(item);
+      //         break;
+      //       }
+      //     }
+      //   }
+      // });
       return {
         ...state,
         detailNav:detailNavs,
         apiDetail:action.payload,
         apiCurUrl:action.payload.id
-      }
+      };
     },
     /**
      * errorCodeList数据存储

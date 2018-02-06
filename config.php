@@ -198,7 +198,7 @@ class ApiParser
      * @return string
      */
     private function parseSampleNode($node){
-        if($node['sample']){
+        if($node['sample']!==null){
             return $node['sample'];
         }else{
             return '';

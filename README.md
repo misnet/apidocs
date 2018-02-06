@@ -46,7 +46,18 @@ api-jsons
     {
         "name":"后台用户API",
         "summary":"提供了后台用户的相关API",
-        "apiFiles":"user/*.json"
+        "children":[
+            {
+                "name":"账户管理"
+                "apiFiles":"user/account/*.json",
+                "summary":"提供后台用户账号管理相关API"
+            },
+            {
+                "name":"资金管理",
+                "apiFiles":"user/money/*.json",
+                "summary":"有关账号充值与提现相关API"
+            }
+        ]
     },
     {
         "name":"系统API",
@@ -61,7 +72,7 @@ api-jsons
 - name：api的分类名称
 - summary：api分类的简短摘要描述
 - apiFiles：本分类下的api文件存放路径，支持*方式模式匹配，路径相关于api.json文件而言
-
+- children: 支持多层式子类
 ## api接口示例文件
 ```
 {
@@ -140,6 +151,6 @@ sample、responseItem属性，如果是response/data这个对象还可能有hasS
 - type：有Boolean、Object、Array、String、Integer
 - description: 描述
 - sample: mock（示例）数据
-- hasSampleFile: 是否有mock示例数据，true为有，false为无，具适用于response/data这个节点
+- hasSampleFile: 是否有mock示例数据，true为有，false为无，只适用于response/data这个节点
 - responseItem: 节点的子节点，每一个responseItem和
 节点一样，具有type、description、sample、responseItem等属性
