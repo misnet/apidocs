@@ -1,12 +1,16 @@
 import path from 'path';
 
 export default {
-  //"hash":true,
+  "hash":true,
   "entry": "src/index.js",
   "outputPath":path.resolve(__dirname, '../asset'),
-  "publicPath":"./asset/",
+  "publicPath":"./",
   "output":{
     "crossOriginLoading":"anonymous"
+  },
+  "html":{
+    "template":"./src/index.ejs",
+    "filename":path.resolve(__dirname, '../index.html')
   },
   "extraBabelPlugins": [
       "transform-runtime",
