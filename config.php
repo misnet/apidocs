@@ -24,9 +24,16 @@ class ApiParser
     private $apiList = [];
     private $apiModule = [];
     private $globalParameter=[];
+    private $cacheFile = '';
+    private $cacheLifeTime = 600;
     public function __construct($rootDir)
     {
         $this->rootDir = $rootDir;
+        $this->_logFile = __DIR__.'/temp/log.txt';
+        $this->cacheFile= __DIR__.'/temp/cache.txt';
+        if(!is_writable(__DIR__.'/temp')){
+            throw new \Exception('无法写入缓存文件，请检查temp目录是否可写');
+        }
         $this->init();
     }
     /**
@@ -94,6 +101,19 @@ class ApiParser
     }
     private function init(){
         if (empty($this->apiList)) {
+            $now = time();
+            if($this->cacheFile && file_exists($this->cacheFile) && $now - filemtime($this->cacheFile) <=$this->cacheLifeTime){
+                $data = file_get_contents($this->cacheFile);
+                if($data){
+                    $udata = unserialize($data);
+                    if($udata){
+                        $this->apiList = $udata['apiList'];
+                        $this->apiModule = $udata['apiModule'];
+                        return;
+                    }
+                }
+            }
+
             $configFile = $this->rootDir.'/api.json';
             if (file_exists($configFile)) {
                 $configContent = file_get_contents($configFile);
@@ -106,8 +126,26 @@ class ApiParser
                     $index++;
                 }
             }
+            if($this->cacheFile){
+                $data = [];
+                $data['apiList']   = $this->apiList;
+                $data['apiModule'] = $this->apiModule;
+                file_put_contents($this->cacheFile,serialize($data));
+            }
         }
     }
+
+    /**
+     * 删除缓存
+     * @return bool
+     */
+    public function clearCache(){
+        if($this->cacheFile){
+            @unlink($this->cacheFile);
+        }
+        return true;
+    }
+
 
     /**
      * 取得API模块列表
@@ -165,7 +203,7 @@ class ApiParser
                 //生成sample
 
                 $response = $this->getSample($apiData['response']);
-                $response['code'] = 0;
+                $response['status'] = 0;
                 $sampleData = $response;
             }
         }
@@ -174,7 +212,7 @@ class ApiParser
 
     /**
      * 解析api json文件的response部分，生成sample
-     * @return array [data,code]
+     * @return array [data,status]
      */
     private function getSample($response){
         $data = [];

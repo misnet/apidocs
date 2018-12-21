@@ -14,6 +14,10 @@ import md5 from 'md5';
 export function queryApiTree() {
   return request(ApiConfig.APIDOC_HOST + ApiConfig.APILIST.API_CATES);
 }
+
+export function clearCache () {
+    return request(ApiConfig.APIDOC_HOST + ApiConfig.APILIST.CLEAR_CACHE);
+}
 /**
  * API 公共请求参数
  */

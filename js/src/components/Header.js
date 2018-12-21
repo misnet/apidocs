@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import {Icon,Modal,Form,Input} from 'antd';
+import {Icon,Modal,Form,Input,Row,Col} from 'antd';
 import styles from '../common/style.less';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
@@ -37,13 +37,55 @@ export default class Header extends Component {
   onCancelSetting = ()=>{
     this.setState({modalVisible:false});
   }
+
+    searchApi = (v)=>{
+        v = v.replace(/(^\s+)|(\s+$)/g,'');
+        const reg = new RegExp(/^http(|s):\/\/([a-zA-Z0-9\.\-]+)([^/:]+)(:\d*)?(\S+)/i);
+        const reg2 = new RegExp(/^\/([a-zA-Z0-9\/\_\-]+)/i);
+        const r = v.match(reg);
+        const r2 = v.match(reg2);
+        if(r && r[5]){
+            const api = r[5];
+            //console.log(api,'/detail/'+api.substring(1).replace(/\//g, '.'));
+            //this.props.dispatch(routerRedux.push('/detail/'+api.substring(1).replace(/\//g, '.')));
+            location.href='#/detail/'+api.substring(1).replace(/\//g, '.');
+        }else{
+            if(r2){
+                const api = r2[0];
+                location.href='#/detail/'+api.substring(1).replace(/\//g, '.');
+            }else{
+                notification.error({
+                    message: '错误提示',
+                    description: '请全入完整的API接口网址',
+                });
+            }
+
+        }
+        //this.props.dispatch(routerRedux.push(api));
+    }
+    clearCache = ()=>{
+        this.props.dispatch({
+            type:'apiData/clearCache'
+        });
+
+    }
   render () {
-    const {setting:{appKey,appSecret,consoleToken,memberToken,host}} = this.props.apiData;
+    const {setting:{appKey,appSecret,consoleToken,memberToken,host},clearing} = this.props.apiData;
     const {getFieldDecorator} = this.props.form;
     return (
       <div>
-        <div onClick={this.showModal} className={styles.docSetting}><Icon type="setting"></Icon></div>
-        <h1 className={styles.doctitle}><Link to="/">Kuga APIDoc</Link></h1>
+          <Row gutter={16}>
+              <Col  span={11}><h1 className={styles.doctitle}><Link to="/">Kuga APIDoc</Link></h1></Col>
+              <Col span={6} style={{display:"none"}}><Input.Search
+                  placeholder="搜索接口，如https://apidoc.kity.me/common/captcha/getSms"
+                  onSearch={(v)=>this.searchApi(v)}
+                  enterButton
+              /></Col>
+              <Col span={7}>
+                  <a onClick={()=>this.clearCache()}>{clearing?'清API缓存中...':'清API缓存'}</a>
+                  <div onClick={this.showModal} className={styles.docSetting}><Icon type="setting"></Icon></div>
+              </Col>
+          </Row>
         <Modal
           width={600}
           visible={this.state.modalVisible}

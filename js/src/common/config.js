@@ -11,6 +11,7 @@ export default {
     API_CATES: "",
     API_LIST:"list",
     GLOBAL_PARAMS:"global",
-    ERR_CODE:'errcode'
+    ERR_CODE:'errcode',
+    CLEAR_CACHE:'clearcache'
   }
 };

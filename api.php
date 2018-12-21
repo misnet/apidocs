@@ -8,6 +8,10 @@ header('Access-Control-Allow-Credentials:true');
 $parser = new ApiParser(API_ROOT_DIR);
 $method  = isset($_GET['method'])?$_GET['method']:'';
 switch($method){
+    case 'clearcache':
+        $detail['status'] = 0;
+        $detail['data'] = $parser->clearCache();
+        break;
     case 'global':
         $detail['status'] = 0;
         $detail['data'] = $parser->getGlobalParameter();

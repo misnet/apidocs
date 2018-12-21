@@ -1,4 +1,4 @@
-import {queryApiTree, queryGlobalParams, queryApiList, queryApiDetail,queryErrorCodeList,apiRequest} from '../services/api';
+import {queryApiTree, queryGlobalParams, queryApiList, queryApiDetail,queryErrorCodeList,apiRequest,clearCache} from '../services/api';
 import {forEach} from 'lodash';
 function getDetailNav (item, url, detailNavs) {
   if (!detailNavs) {
@@ -62,6 +62,7 @@ export default {
       consoleToken: '',
       memberToken:''
     },
+      clearing:false
   },
 
   subscriptions:{
@@ -87,6 +88,17 @@ export default {
         type:'saveErrorCode',
         payload:responseData
       })
+    },
+    * clearCache({payload},{call,put}) {
+        yield put({
+            type:'clearing',
+            payload:true
+        })
+        yield call(clearCache, payload);
+        yield put({
+            type:'clearing',
+            payload:false
+        })
     },
     /**
      * 取得某个指定API详情
