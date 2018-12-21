@@ -66,6 +66,7 @@ const responseColumns = [{
 
 function getRequestItem(node,key){
     let newNode = Object.assign({},node);
+    newNode.key = key?key:node.param;
     if(newNode.type && newNode.type.toLowerCase()=='jsonstring'
         && newNode.requestItem
         && newNode.requestItemType){
@@ -86,6 +87,7 @@ function getResponseItem(node,key,nodeId){
     //let itemData = {"name":key,"id":nodeId};
     let newNode = Object.assign({},node);
     newNode['id'] = nodeId;
+    newNode['key'] = key?key:newNode['id'];
     if(node.responseItem){
         newNode.children = [];
         for(let childKey in node.responseItem){
@@ -106,8 +108,8 @@ class ApiDetail extends Component{
     render(){
         const {request,response,responseSample} = this.props;
         const responseDataSource = [{
-            id:'code',
-            name:'code',
+            id:'status',
+            name:'status',
             type:'Integer',
             sample:0,
             description:'响应码，0为成功，非0为失败'
@@ -126,7 +128,7 @@ class ApiDetail extends Component{
                     <Table
                     columns={columns} 
                     pagination={false}
-                    rowKey={record=>record.param}
+                    rowKey={record=>record.key}
                     dataSource={requestDataSource} 
                     footer={this.renderRequestFooter}
                     />
