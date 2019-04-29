@@ -4,8 +4,7 @@
  */
 import {Component} from 'react';
 import PropTypes from 'prop-types'
-import { Card, Table, Icon, Divider } from 'antd';
-import {Link} from 'dva/router';
+import { Card, Table } from 'antd';
 import styles from '../common/style.less';
 
 const columns = [{
@@ -64,16 +63,15 @@ const responseColumns = [{
     dataIndex:'description'
 }];
 
-function getRequestItem(node,key){
+function getRequestItem(node,key,nodeId){
     let newNode = Object.assign({},node);
     newNode.key = key?key:node.param;
-    if(newNode.type && newNode.type.toLowerCase()=='jsonstring'
-        && newNode.requestItem
-        && newNode.requestItemType){
+    newNode.id  = nodeId;
+    if(newNode.type && newNode.requestItem){
         newNode.children = [];
-        newNode.type = newNode.requestItemType;
+        //newNode.type = newNode.requestItemType;
         for(let k in newNode.requestItem){
-            newNode.children.push(getRequestItem(newNode.requestItem[k],key+'.'+k));
+            newNode.children.push(getRequestItem(newNode.requestItem[k],key+'.'+k,nodeId+'_'+k));
         }
         delete(newNode.requestItem);
         delete(newNode.requestItemType);
@@ -87,11 +85,11 @@ function getResponseItem(node,key,nodeId){
     //let itemData = {"name":key,"id":nodeId};
     let newNode = Object.assign({},node);
     newNode['id'] = nodeId;
-    newNode['key'] = key?key:newNode['id'];
+    newNode['key'] = key;
     if(node.responseItem){
         newNode.children = [];
         for(let childKey in node.responseItem){
-            newNode.children.push(getResponseItem(node.responseItem[childKey],childKey,key+'_'+childKey));
+            newNode.children.push(getResponseItem(node.responseItem[childKey],childKey,nodeId+'_'+childKey));
         }
         delete(newNode.responseItem);
     }
@@ -103,7 +101,7 @@ function getResponseItem(node,key,nodeId){
 
 class ApiDetail extends Component{
     renderRequestFooter=()=>{
-        return <p>说明： 类型为<strong>Array或Object</strong>的业务参数，请用Json.stringify转为字符串再传给接口</p>
+        return <p>说明： 类型为<strong>Array或Object</strong>的业务参数：如果传参用的是form-data形式时，请用Json.stringify转为字符串再传给接口。如果传参用的是JSON形式，则不需要转换</p>
     }
     render(){
         const {request,response,responseSample} = this.props;
@@ -119,9 +117,9 @@ class ApiDetail extends Component{
         }
         let requestDataSource = [];
         for(let key in request){
-            requestDataSource.push(getRequestItem(request[key]));
+            requestDataSource.push(getRequestItem(request[key],key,key));
         }
-        console.log('responseDataSource:',responseDataSource);
+        //console.log('responseDataSource:',responseDataSource);
         return (
             <div>
                 <Card title="业务参数" className={styles.card}>

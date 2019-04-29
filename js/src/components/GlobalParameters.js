@@ -4,7 +4,7 @@
  */
 import {Component} from 'react';
 import PropTypes from 'prop-types'
-import { Table, Icon, Divider } from 'antd';
+import { Table} from 'antd';
 
 class GlobalParameters extends Component{
     render(){
@@ -22,7 +22,7 @@ class GlobalParameters extends Component{
             dataIndex: 'required',
             key: 'required',
             render:(text,record)=>{
-                if(record.param=='accessToken')
+                if(record.param==='access_token')
                     return this.props.accessTokenRequired?'是':'否';
                 else
                     return record.required?'是':'否';

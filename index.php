@@ -1,3 +1,3 @@
 <?php
-header('location:asset');
-?>
+
+header('location:js/dist');

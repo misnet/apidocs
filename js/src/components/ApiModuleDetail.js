@@ -4,11 +4,11 @@
  */
 import {Component} from 'react';
 import PropTypes from 'prop-types'
-import { Card, Table, Icon, Divider } from 'antd';
+import { Card, Table } from 'antd';
 import {Link} from 'dva/router';
 class ApiModuleDetail extends Component{
     render(){
-        const {title,apiList,description} = this.props;
+        const {title,apiList} = this.props;
         const columns = [{
             title:'API列表',
             key:'id',
@@ -26,7 +26,7 @@ class ApiModuleDetail extends Component{
                 <Table
                 columns={columns} 
                 pagination={false}
-                rowKey={record=>record.url}
+                rowKey={record=>record.id}
                 dataSource={apiList} 
                 />
             </Card>

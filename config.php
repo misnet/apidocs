@@ -1,21 +1,17 @@
 <?php
 /**
- * 配置文件及API接口文件解析器
- * @author Donny
+ * 配置文件及API接口文件解析器.
  *
+ * @author Donny
  */
-
 $dir = realpath('api-jsons');
 
 define('DS', DIRECTORY_SEPARATOR);
-define('API_GATEWAY','http://api.kuga.wang/v3/gateway');
-define('APIMOCK_URL','http://api.kuga.wang/apidocs');
 define('API_ROOT_DIR', $dir);
-
 
 /**
  * API文件解析器
- * Class ApiParser
+ * Class ApiParser.
  */
 class ApiParser
 {
@@ -23,92 +19,104 @@ class ApiParser
     private $samplePath;
     private $apiList = [];
     private $apiModule = [];
-    private $globalParameter=[];
+    private $globalParameter = [];
     private $cacheFile = '';
     private $cacheLifeTime = 600;
+
     public function __construct($rootDir)
     {
         $this->rootDir = $rootDir;
         $this->_logFile = __DIR__.'/temp/log.txt';
-        $this->cacheFile= __DIR__.'/temp/cache.txt';
-        if(!is_writable(__DIR__.'/temp')){
+        $this->cacheFile = __DIR__.'/temp/cache.txt';
+        if (!is_writable(__DIR__.'/temp')) {
             throw new \Exception('无法写入缓存文件，请检查temp目录是否可写');
         }
         $this->init();
     }
+
     /**
-     * 解析某个目录
+     * 解析某个目录.
+     *
      * @param $moduleName
      * @param $dirName
      */
-    private function _parseJsonDir(&$module,$dirName){
+    private function _parseJsonDir(&$module, $dirName)
+    {
         foreach (glob($dirName.DS.'*') as $filename) {
-            if(is_dir($filename)){
-                $this->_parseJsonDir($module,$filename);
-            }else{
-                $this->_parseJsonFile($module,$filename);
+            if (is_dir($filename)) {
+                $this->_parseJsonDir($module, $filename);
+            } else {
+                $this->_parseJsonFile($module, $filename);
             }
         }
     }
 
     /**
-     * 解析单个json文件
+     * 解析单个json文件.
+     *
      * @param $moduleName
      * @param $filename
      */
-    private function _parseJsonFile(&$module,$filename){
+    private function _parseJsonFile(&$module, $filename)
+    {
         $tmp = file_get_contents($filename);
         $jsonContent = json_decode($tmp, true);
         if (!array_key_exists($jsonContent['id'], $this->apiList)) {
             $this->apiList[$jsonContent['id']] = $jsonContent;
             $module['apis'][$jsonContent['id']] = [
-                'name'=>$jsonContent['name'],
-                'id'=>$jsonContent['id']
+                'name' => $jsonContent['name'],
+                'id' => $jsonContent['id'],
             ];
         }
-
     }
 
     /**
-     * 取得花
+     * 取得花.
+     *
      * @return array|mixed
      */
-    public function getGlobalParameter(){
+    public function getGlobalParameter()
+    {
         $configFile = $this->rootDir.DS.'global.json';
         $configContent = file_get_contents($configFile);
         $configArray = json_decode($configContent, true);
-        return $configArray?$configArray:[];
-    }
-    private function _parseApiModule(&$module){
-        if(isset($module['children'])){
-            $j = 0;
-            foreach($module['children'] as &$childModule){
-                $this->_parseApiModule($childModule);
-                $j++;
-            }
-        }else{
-            if (isset($module['apiFiles'])) {
 
-                foreach (glob($this->rootDir . DS . $module['apiFiles']) as $filename) {
-                    if(is_dir($filename)){
-                        $this->_parseJsonDir($module,$filename);
-                    }else{
-                        $this->_parseJsonFile($module,$filename);
+        return $configArray ? $configArray : [];
+    }
+
+    private function _parseApiModule(&$module)
+    {
+        if (isset($module['children'])) {
+            $j = 0;
+            foreach ($module['children'] as &$childModule) {
+                $this->_parseApiModule($childModule);
+                ++$j;
+            }
+        } else {
+            if (isset($module['apiFiles'])) {
+                foreach (glob($this->rootDir.DS.$module['apiFiles']) as $filename) {
+                    if (is_dir($filename)) {
+                        $this->_parseJsonDir($module, $filename);
+                    } else {
+                        $this->_parseJsonFile($module, $filename);
                     }
                 }
             }
         }
     }
-    private function init(){
+
+    private function init()
+    {
         if (empty($this->apiList)) {
             $now = time();
-            if($this->cacheFile && file_exists($this->cacheFile) && $now - filemtime($this->cacheFile) <=$this->cacheLifeTime){
+            if ($this->cacheFile && file_exists($this->cacheFile) && $now - filemtime($this->cacheFile) <= $this->cacheLifeTime) {
                 $data = file_get_contents($this->cacheFile);
-                if($data){
+                if ($data) {
                     $udata = unserialize($data);
-                    if($udata){
+                    if ($udata) {
                         $this->apiList = $udata['apiList'];
                         $this->apiModule = $udata['apiModule'];
+
                         return;
                     }
                 }
@@ -123,83 +131,97 @@ class ApiParser
                     $this->apiModule[$index] = $configCategory;
                     $this->apiModule[$index]['id'] = $index;
                     $this->_parseApiModule($this->apiModule[$index]);
-                    $index++;
+                    ++$index;
                 }
             }
-            if($this->cacheFile){
+            if ($this->cacheFile) {
                 $data = [];
-                $data['apiList']   = $this->apiList;
+                $data['apiList'] = $this->apiList;
                 $data['apiModule'] = $this->apiModule;
-                file_put_contents($this->cacheFile,serialize($data));
+                file_put_contents($this->cacheFile, serialize($data));
             }
         }
     }
 
     /**
-     * 删除缓存
+     * 删除缓存.
+     *
      * @return bool
      */
-    public function clearCache(){
-        if($this->cacheFile){
+    public function clearCache()
+    {
+        if ($this->cacheFile) {
             @unlink($this->cacheFile);
         }
+
         return true;
     }
 
-
     /**
-     * 取得API模块列表
+     * 取得API模块列表.
+     *
      * @return array
      */
-    public function getApiModule(){
+    public function getApiModule()
+    {
         return $this->apiModule;
     }
 
     /**
-     * 取得错误代码列表
+     * 取得错误代码列表.
+     *
      * @return mixed
      */
-    public function getErrCodeList(){
+    public function getErrCodeList()
+    {
         $codeContent = file_get_contents($this->rootDir.DS.'errcode.json');
-        return json_decode($codeContent,true);
+
+        return json_decode($codeContent, true);
     }
+
     /**
      * 解析api json文件的内容，生成property和sample两部分
      *  property是api json文件的内容
-     *  sample是生成的mock数据
+     *  sample是生成的mock数据.
+     *
      * @param $apiId
+     *
      * @return array [property,sample]
      */
-    public function getApiDetail($apiId){
+    public function getApiDetail($apiId)
+    {
         $d = [];
-        if(isset($this->apiList[$apiId])){
+        if (isset($this->apiList[$apiId])) {
             $d = $this->apiList[$apiId];
         }
-        $sample = $this->parseResponseMock($apiId,$d);
-        return ['property'=>$d,'sample'=>$sample];
+        $sample = $this->parseResponseMock($apiId, $d);
+
+        return ['property' => $d, 'sample' => $sample];
     }
 
     /**
-     * 解析出Mock内容
+     * 解析出Mock内容.
+     *
      * @param $apiId
      * @param array $apiData
      */
-    private function parseResponseMock($apiId,$apiData){
+    private function parseResponseMock($apiId, $apiData)
+    {
         $sampleData = [];
-        if(isset($apiData['response']['data'])){
+        if (isset($apiData['response']['data'])) {
             $data = $apiData['response']['data'];
 
             //sample目录下有例子文件，且hasSampleFile为true
-            if(isset($data['hasSampleFile']) && $data['hasSampleFile']){
+            if (isset($data['hasSampleFile']) && $data['hasSampleFile']) {
                 $key = $apiId;
-                $key = ltrim($key,'/');
+                $key = ltrim($key, '/');
                 $sampleFile = API_ROOT_DIR.DS.'sample/'.$key.'.json';
 
-                if(file_exists($sampleFile)){
+                if (file_exists($sampleFile)) {
                     $sampleContent = file_get_contents($sampleFile);
-                    $sampleData    = json_decode($sampleContent,true);
+                    $sampleData = json_decode($sampleContent, true);
                 }
-            }else{
+            } else {
                 //生成sample
 
                 $response = $this->getSample($apiData['response']);
@@ -207,41 +229,46 @@ class ApiParser
                 $sampleData = $response;
             }
         }
+
         return $sampleData;
     }
 
     /**
-     * 解析api json文件的response部分，生成sample
+     * 解析api json文件的response部分，生成sample.
+     *
      * @return array [data,status]
      */
-    private function getSample($response){
+    private function getSample($response)
+    {
         $data = [];
-        foreach ($response as $key=>$node ){
-            if(isset($node['responseItem'])){
-                if(strtolower($node['type'])=='array'){
+        foreach ($response as $key => $node) {
+            if (isset($node['responseItem'])) {
+                if (strtolower($node['type']) == 'array') {
                     $data[$key] = [$this->getSample($node['responseItem'])];
-                }else{
+                } else {
                     $data[$key] = $this->getSample($node['responseItem']);
                 }
-            }else{
+            } else {
                 $data[$key] = $this->parseSampleNode($node);
             }
         }
+
         return $data;
     }
 
     /**
-     * 解析sample属性
+     * 解析sample属性.
+     *
      * @param $node
+     *
      * @return string
      */
-    private function parseSampleNode($node){
-        if($node['sample']!==null){
+    private function parseSampleNode($node)
+    {
+        if ($node['sample'] !== null) {
             return $node['sample'];
-        }else{
+        } else {
             return '';
         }
     }
-
-
 }

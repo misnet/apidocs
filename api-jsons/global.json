@@ -18,7 +18,7 @@
   {
     "param": "appkey",
     "required": true,
-    "default": "10086",
+    "default": "1000",
     "type": "String",
     "description": "系统应用识别码",
     "name": "应用ID"

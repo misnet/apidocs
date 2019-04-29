@@ -12,11 +12,17 @@
 
 ## 安装
 ```
+chmod + 777  temp -R
 cd js
-npm install
-npm run build
+yarn
+yarn start
 ```
-注：src/common/config.js中可修改自己的配置
+注：
+- src/.umirc.dev.js中可修改自己的开发配置
+- src/.umirc.prod.js中可修改正式环境的的开发配置
+- API_HOST和APIDOC_HOST请自行替换成自己的实际网址
+- yarn build-dev 编译开发环境
+- yarn build-prod：编译正式环境
 
 演示示例：http://apidocs.kity.me/
 ## 项目运行方式
@@ -29,16 +35,13 @@ mock服务 http://localhost/apidocs/read.php?mock=1&api=接口的ID
 ## api-jsons目录说明
 api-jsons
 
- -- sample mock数据
+ -- acc 
 
  -- api.json api根文件
 
  -- errcode.json 错误代码说明文件
-
- -- system 示例api接口
-
- -- user 示例api接口
  
+ -- global.json 全局参数
 
 ## api.json示例文件说明
 ```
@@ -88,25 +91,22 @@ api-jsons
             "param":"username",
             "required":true,
             "default":"",
-            "name":"用户名",
             "type":"String",
-            "description":"描述"
+            "description":"用户名"
         },
         {
             "param":"password",
             "required":true,
             "default":"",
             "type":"String",
-            "description":"密码",
-            "name":"密码"
+            "description":"密码"
         },
         {
             "param":"mobile",
             "required":true,
             "default":"",
             "type":"String",
-            "description":"手机号",
-            "name":"手机号"
+            "description":"手机号"
         }
     ],
     "response":{
@@ -143,14 +143,12 @@ sample、responseItem属性，如果是response/data这个对象还可能有hasS
 - description: 参数的描述
 - default: 参数不传值时，服务端给了这个参数的默认值
 - required: true或false，表示是否必填项
-- type:参数类型，值有String，Integer，Float，Boolean，JsonString五种。JsonString表示当前参数是一个json enode后的String类型的字串
-- requestItem：当type为JsonString时，requestItem里会有json字串的组成属性，和request的基本节点一样，有type，param，default，required，description属性
-- requestItemType：Object或Array，指的是当前参数在json encode之前是什么样的
+- type:参数类型，值有String，Integer，Float，Boolean，Object，Array六种。
+- requestItem：当type为Array或Object时，表示当前参数还有子参数，子参数和request的基本节点一样，有type，param，default，required，description属性
 
 ### 每一个response节点的属性说明
 - type：有Boolean、Object、Array、String、Integer
 - description: 描述
 - sample: mock（示例）数据
 - hasSampleFile: 是否有mock示例数据，true为有，false为无，只适用于response/data这个节点
-- responseItem: 节点的子节点，每一个responseItem和
-节点一样，具有type、description、sample、responseItem等属性
+- responseItem: 节点的子节点，每一个responseItem和普通的response节点一样，具有type、description、sample、responseItem等属性

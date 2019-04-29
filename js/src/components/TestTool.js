@@ -4,13 +4,14 @@
  */
 import { connect } from 'dva';
 import { Component } from 'react';
-import { Card,Input,  Button, Select, Table,Form, message } from 'antd';
+import { Card,Input,  Button, Select, Form, message,notification } from 'antd';
 import { forEach } from 'lodash';
+const TextArea = Input.TextArea;
 @connect(state => ({
   apiData: state.apiData,
 }))
 @Form.create()
-export default class TestTool extends Component {
+class TestTool extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -24,14 +25,22 @@ export default class TestTool extends Component {
   submitApiData=(e)=>{
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log(values);
+        const setting = this.props.apiData.setting;
+        if(!setting.host){
+          notification.error({message:'提示',description:'请点右上角设置图标，设置好API网关地址'});
+          return;
+        }
+        let jd={};
+        try{
+          jd = JSON.parse(values['jsonData']);
+        }catch(e){
+          jd = {};
+        }
         this.props.dispatch({
           type:'apiData/doApiRequest',
           payload:{
-            host:this.props.gatewayHost,
-            url:this.props.gatewayUrl,
-            params:values,
-            setting:this.props.apiData.setting,
+            params:jd,
+            setting:setting,
             accessLevel:this.props.accessLevel
           }
         })
@@ -49,9 +58,9 @@ export default class TestTool extends Component {
   }
   buildFormItem=(record)=>{
     const {getFieldDecorator} = this.props.form;
-    if (record.type == 'formItem') {
+    if (record.type === 'formItem') {
       return getFieldDecorator(record.param, {
-        initialValue: (record.param!='sign' && record.param!='accessToken' && record.value)?record.value:record.default,
+        initialValue: (record.param!=='sign' && record.param!=='accessToken' && record.value)?record.value:record.default,
 
         rules: [
           {
@@ -60,90 +69,61 @@ export default class TestTool extends Component {
           },
         ],
       })(
-        <Input.TextArea disabled={(record.param=='sign'||record.param=='accessToken')?true:false}/>
+        <Input.TextArea disabled={(record.param==='sign'||record.param==='accessToken')?true:false}/>
       );
     }
   }
   render () {
-    const {accessLevel,globalParams, privateParams,gatewayUrl,apiData:{apiRequestResult,setting}} = this.props;
+    const {globalParams, privateParams,apiData:{apiRequestResult}} = this.props;
     const {accessTokenType,executeTime} = this.state;
     const {getFieldDecorator} = this.props.form;
-    const columns = [
-      {
-        title: '参数',
-        dataIndex: 'param',
-        key: 'param'
-      }, {
-        title: '值',
-        dataIndex: 'value',
-        key: 'value',
-        render: (text, record) => this.buildFormItem(record)
+    let jsonData = {};
+    globalParams.forEach((x) => {
+      if(x['param']!=='sign' && x['param']!=='appkey'&& x['param']!=='access_token') {
+        jsonData[x['param']] = x['default']
       }
-    ];
-    let dataSource = [];
-    //公共参
-    if (globalParams) {
-      let globalData = [];
-      globalParams.forEach((x) => {
-        let d = {
-          'param': x['param'],
-          'value': '',
-          'type': 'formItem',
-          'default':x['default'],
-          'required':x['required'],
-          'key':x['param']+'_g'
-        };
-        if(d.param=='appkey'){
-          d.value = setting.appKey;
-        }else if(d.param=='accessToken'||d.param=='sign'){
-          d.required = false;
+    });
+    jsonData['method'] = this.props.method;
+    function getPrivateParams(node,parent){
+      node.forEach((x) => {
+        if(!x['requestItem'])
+          parent[x['param']] = x['default']?x['default']:"";
+        else {
+          const childNode = {};
+          const v = getPrivateParams(x['requestItem'], childNode);
+          if(x['type'].toLowerCase() ==='array'){
+            parent[x['param']] = [v];
+          }else{
+            parent[x['param']] = v;
+          }
         }
-        globalData.push(d);
       });
-      dataSource.push({
-        'param': '公共参数',
-        'children': globalData,
-        'type': null,
-        'key':'global'
-      });
+      return parent;
     }
-    //业务参数
-    if (privateParams && Array.isArray(privateParams) && privateParams.length>0) {
-      let privateData = [];
-      privateParams.forEach((x) => {
-        privateData.push({
-          'param': x['param'],
-          'type': 'formItem',
-          'value': '',
-          'default':x['default'],
-          'required':x['required'],
-          'key':x['param']+'_p'
-        });
-      });
-      dataSource.push({
-        'param': '业务参数',
-        'children': privateData,
-        'type': null,
-        'key':'private'
-      });
-    }
+    getPrivateParams(privateParams,jsonData);
     return (
 
         <div>
-          <Table
-            defaultExpandedRowKeys={['global','private']}
-            columns={columns}
-            pagination={false}
-            rowKey={record => record.key}
-            dataSource={dataSource}
-          />
+
           {getFieldDecorator('accessTokenType', {
             initialValue: accessTokenType,
           })(<Select style={{marginRight:'10px'}}>
             <Select.Option value="">不设置AccessToken</Select.Option>
-            <Select.Option value="console">后台用户AccessToken</Select.Option>
-            <Select.Option value="member">会员用户AccessToken</Select.Option>
+            <Select.Option value="console">AccessToken1</Select.Option>
+            <Select.Option value="member">AccessToken2</Select.Option>
           </Select>)}
+          <p>参数：</p>
+          <div>
+            {getFieldDecorator('jsonData', {
+              initialValue: JSON.stringify(jsonData,null,4),
+            })(<TextArea rows={20}></TextArea>)}
+          </div>
+          <p>说明</p>
+          <ul>
+            <li>appkey:系统会自动读取右上角的appkey，您不需要填写该参数</li>
+            <li>sign：签名参数由系统自动计算，也无需填写</li>
+            <li>access_token：根据您的选择，自动读取右上角的设置</li>
+          </ul>
           <Button type={'primary'} style={{margin:'10px 0'}} onClick={this.submitApiData}>开始测试</Button>
           <Card title={"API执行结果"+(executeTime?'（'+executeTime+'）':'')} style={{display:apiRequestResult?'block':'none'}}>
           <pre>
@@ -155,3 +135,4 @@ export default class TestTool extends Component {
     );
   }
 };
+export default TestTool;
