@@ -7,8 +7,9 @@ export default {
         'process.env.APIDOCS_HOST':'http://apidocs.kity.me',
         'process.env.API_HOST':'http://acc.api.kuga.wang/v3/gateway',
     },
-    base:'/',
-    publicPath:'/',
+    outputPath:'../dist',
+    base:'/dist/',
+    publicPath:'/dist/',
     hash:true,
     treeShaking: true,
     plugins: [

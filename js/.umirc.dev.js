@@ -7,8 +7,9 @@ export default {
         'process.env.APIDOCS_HOST':'http://localhost/mygithub/kuga/docs',
         'process.env.API_HOST':'http://acc.api.kuga.wang/v3/gateway',
     },
-    publicPath:'/mygithub/kuga/docs/js/dist/',
-    base:'/mygithub/kuga/docs/js/dist/',
+    outputPath:'../dist',
+    publicPath:'/mygithub/kuga/docs/dist/',
+    base:'/mygithub/kuga/docs/dist/',
     treeShaking: true,
     plugins: [
       // ref: https://umijs.org/plugin/umi-plugin-react.html

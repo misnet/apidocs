@@ -1,3 +1,3 @@
 <?php
 
-header('location:js/dist');
+header('location:dist');
