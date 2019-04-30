@@ -152,3 +152,26 @@ sample、responseItem属性，如果是response/data这个对象还可能有hasS
 - sample: mock（示例）数据
 - hasSampleFile: 是否有mock示例数据，true为有，false为无，只适用于response/data这个节点
 - responseItem: 节点的子节点，每一个responseItem和普通的response节点一样，具有type、description、sample、responseItem等属性
+
+### nginx配置说明
+```
+server {
+    listen       80;
+    server_name apidocs.kity.me;
+    access_log /dev/null common;
+    error_log /var/log/nginx/apidocs.err;
+    set $root_path '/opt/apidocs/js/dist';
+    root $root_path;
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+    location ~* \.(eot|ttf|svg|woff)$ {
+         add_header Access-Control-Allow-Origin *;
+    }
+    location ~ /\.git {
+        deny all;
+    }
+}
+```
+注意：
+- 如果web根目录不是指向js/dist目录的，要修改.umirc.prod.js中的base和publicPath参数

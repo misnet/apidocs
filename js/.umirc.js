@@ -8,7 +8,7 @@ export default {
       antd: true,
       dva: true,
       dynamicImport: { webpackChunkName: true },
-      title: 'apidocsv2',
+      title: 'Kuga APIDoc',
       dll: true,
       
       routes: {
