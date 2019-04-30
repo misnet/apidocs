@@ -162,8 +162,8 @@ server {
     error_log /var/log/nginx/apidocs.err;
     set $root_path '/opt/apidocs/js/dist';
     root $root_path;
-    location / {
-        try_files $uri $uri/ /index.html;
+    location /dist {
+        try_files $uri $uri/ /dist/index.html;
     }
     location ~* \.(eot|ttf|svg|woff)$ {
          add_header Access-Control-Allow-Origin *;
@@ -174,4 +174,4 @@ server {
 }
 ```
 注意：
-- 如果web根目录不是指向js/dist目录的，要修改.umirc.prod.js中的base和publicPath参数
+- 如果web根目录不是指向本项目根目录的，要修改.umirc.prod.js中的base和publicPath参数
