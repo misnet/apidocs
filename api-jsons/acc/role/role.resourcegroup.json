@@ -6,6 +6,13 @@
     "method":"Acc.listResourcesGroup",
     "accessLevel": 1,
     "request":[
+        {
+            "param":"appId",
+            "required":false,
+            "default":1,
+            "type":"Integer",
+            "description":"应用ID"
+        }
     ],
     "response":{
         "data":{

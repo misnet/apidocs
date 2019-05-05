@@ -1,0 +1,12 @@
+{
+  "status": 0,
+  "data": {
+    "RES_STORE": [
+      "OP_LIST"
+    ],
+    "RES_PRODUCT": [
+      "OP_ADD",
+      "OP_LIST"
+    ]
+  }
+}
